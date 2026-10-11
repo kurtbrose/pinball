@@ -3,13 +3,15 @@ import { table } from './table.js';
 export const DT = 1 / 120;
 /** @typedef {{left?: boolean, right?: boolean, reset?: boolean}} Command */
 export class Simulation {
-  constructor() {
+  /** @param {{actuation?: 'servo'|'solenoid', isolated?: boolean}} [options] */
+  constructor(options = {}) {
+    this.actuation = options.actuation ?? 'servo';
     this.tick = 0;
     this.drains = 0;
     this.drained = false;
     this.world = new World(Vec2(0, table.gravity));
     const ground = this.world.createBody();
-    for (const [a, b] of table.walls) {
+    for (const [a, b] of options.isolated ? [] : table.walls) {
       ground.createFixture(new Edge(Vec2(a[0], a[1]), Vec2(b[0], b[1])), { friction: 0.15, restitution: 0.65 });
     }
     this.flippers = [1, -1].map((side) => {
@@ -22,7 +24,7 @@ export class Simulation {
       const travel = table.restAngle - table.raisedAngle;
       const joint = new RevoluteJoint({ enableMotor: true, maxMotorTorque: table.motorTorque, enableLimit: true, lowerAngle: side === 1 ? -travel : 0, upperAngle: side === 1 ? 0 : travel }, ground, body, Vec2(x, table.flipperY));
       this.world.createJoint(joint);
-      return { body, joint, side };
+      return { body, joint, side, holding: false };
     });
     this.ball = this.world.createDynamicBody({ position: Vec2(2.4, 1.5), bullet: true, linearDamping: 0.025, angularDamping: 0.02 });
     this.ball.createFixture(new Circle(table.ballRadius), { density: 7.8, friction: 0.18, restitution: 0.5 });
@@ -38,12 +40,21 @@ export class Simulation {
   /** @param {Command} [input] */
   step(input = {}) {
     if (input.reset) this.resetBall();
-    this.flippers.forEach(({ joint, side }, index) => {
+    this.flippers.forEach((flipper, index) => {
+      const { joint, side } = flipper;
       const pressed = index === 0 ? input.left : input.right;
       const target = pressed ? -side * (table.restAngle - table.raisedAngle) : 0;
       const speed = pressed ? table.motorSpeed : table.returnSpeed;
-      // Brake at the stop rather than driving into it at full speed.
-      joint.setMotorSpeed(Math.max(-speed, Math.min(speed, (target - joint.getJointAngle()) * 60)));
+      if (this.actuation === 'solenoid') {
+        if (!pressed) flipper.holding = false;
+        else if (Math.abs(target - joint.getJointAngle()) < table.endStrokeAngle) flipper.holding = true;
+        joint.setMaxMotorTorque(pressed ? (flipper.holding ? table.holdTorque : table.motorTorque) : table.returnTorque);
+        // Torque-limited drive into the native mechanical stop. No approach servo.
+        joint.setMotorSpeed(side * (pressed ? -table.motorSpeed : table.returnSpeed));
+      } else {
+        joint.setMaxMotorTorque(table.motorTorque);
+        joint.setMotorSpeed(Math.max(-speed, Math.min(speed, (target - joint.getJointAngle()) * 60)));
+      }
     });
     this.world.step(DT, 10, 4);
     this.tick++;

@@ -10,4 +10,5 @@ export const table = {
   flipperY: 8.2, flipperLength: 1.12, flipperRadius: 0.12,
   // Strong actuator: quick acceleration and firm hold under ball contact.
   restAngle: 0.42, raisedAngle: -0.5, motorSpeed: 30, returnSpeed: 22, motorTorque: 400,
+  holdTorque: 100, returnTorque: 80, endStrokeAngle: 0.04,
 };

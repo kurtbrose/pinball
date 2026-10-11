@@ -20,3 +20,12 @@
 ## Next priority
 
 Playtest flipper timing, aiming, drain frequency, and return guides. Tune the small table before authorizing Milestone 2.
+
+## Actuation calibration experiment
+
+- Added `/calibration.html` with animated shots and a 16-scenario comparison, plus `node scripts/calibrate.js` for full JSON measurements.
+- Servo remains the default. Experimental stroke/hold is available via `/?actuation=solenoid`. Both use Planck motors, contact impulses, and native travel stops.
+- Experiment holds scale, geometry, restitution, and damping constant; walls and the other flipper are removed from calibration trials.
+- Mid-flipper stationary exit speed: servo approximately 13.49 m/s at 92.1°, stroke/hold approximately 16.78 m/s at 98.3°. These are prototype units, not measurements of a real machine.
+- Nine scenarios/tests pass including full sweep repeatability, position-dependent shot results, and experimental hold/release lifecycle.
+- Surface rolling/spin coupling, realistic proportions, and return lanes remain unresolved. Experimental stop behavior and catching require human evaluation before changing the default.

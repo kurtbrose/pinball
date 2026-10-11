@@ -31,4 +31,12 @@ This runs JSDoc type checking and headless Node physics scenarios. `node scripts
 
 Planck is provisional: these scenarios support initial suitability, not a comprehensive pinball physics evaluation. Human playtesting should assess shot control, flipper response, and return paths before adding mechanisms. No plunger, bumpers, scoring, ball limit, or game-over rules yet.
 
+## Flipper calibration
+
+Open `/calibration.html` to compare 16 repeatable isolated shots: servo and experimental stroke/hold, four contact positions, stationary and 3 m/s incoming balls. The page provides an animated preview and exit speed/direction, flight rise, and peak angular speed during contacts. `node scripts/calibrate.js` prints full JSON including outgoing velocity and first-impact angular speed.
+
+The experimental model uses torque-limited constant target speed through the stroke, native joint stops, reduced hold torque after reaching the stop, and weaker return torque. It is inspired by [Visual Pinball's EOS torque settings](https://github.com/vpinball/vpinball/blob/master/docs/Script%20API%20Reference.md); it is not a port or a calibrated solenoid model. Play it via `/?actuation=solenoid`; normal play retains the servo baseline.
+
+Exit velocity is sampled after the initial 16 ticks and three ticks without an impact impulse, avoiding transient separation between capsule fixtures. Rise ends at the apex, next impact, or five-second trial limit. Peak contact speed is the maximum absolute post-solver angular speed over the initial contact sequence. Results use the prototype's oversized units and do not imply real-machine accuracy. Geometry, damping, and materials are held constant between models.
+
 For static deployment, include the Planck module from `node_modules/planck/dist/planck.mjs` and its license, or copy it to a vendor folder and adjust the import map. The development server is local only and not a production server.

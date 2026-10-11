@@ -1,6 +1,6 @@
 import { table } from './table.js';
-/** @param {CanvasRenderingContext2D} ctx @param {ReturnType<import('./simulation.js').Simulation['snapshot']>} state */
-export function render(ctx, state) {
+/** @param {CanvasRenderingContext2D} ctx @param {ReturnType<import('./simulation.js').Simulation['snapshot']>} state @param {boolean} [showWalls] */
+export function render(ctx, state, showWalls = true) {
   ctx.save(); ctx.scale(100, 100);
   ctx.fillStyle = '#142b35'; ctx.fillRect(0, 0, 6, 10);
   ctx.strokeStyle = '#22414b'; ctx.lineWidth = 0.008;
@@ -10,7 +10,7 @@ export function render(ctx, state) {
   ctx.beginPath(); ctx.arc(3,4.2,1.4,0,Math.PI*2); ctx.stroke();
   ctx.font='italic 0.65px Georgia'; ctx.fillStyle='#31515a'; ctx.fillText('01',3,4.4);
   ctx.lineCap='round'; ctx.lineJoin='round';
-  for (const [a,b] of table.walls) {ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.strokeStyle='#6c8a91';ctx.lineWidth=.085;ctx.stroke();ctx.strokeStyle='#b6d0ce';ctx.lineWidth=.025;ctx.stroke();}
+  for (const [a,b] of showWalls ? table.walls : []) {ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.strokeStyle='#6c8a91';ctx.lineWidth=.085;ctx.stroke();ctx.strokeStyle='#b6d0ce';ctx.lineWidth=.025;ctx.stroke();}
   for (const f of state.flippers) {
     ctx.save();ctx.translate(f.x,f.y);ctx.rotate(f.angle);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(table.flipperLength,0);ctx.lineWidth=table.flipperRadius*2;ctx.strokeStyle='#f3b46d';ctx.shadowColor='#f3b46d';ctx.shadowBlur=12;ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#203943';ctx.beginPath();ctx.arc(0,0,.055,0,Math.PI*2);ctx.fill();ctx.restore();
   }

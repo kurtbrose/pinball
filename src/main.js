@@ -2,7 +2,13 @@ import { Simulation, DT } from './simulation.js';
 import { render } from './renderer.js';
 const canvas = /** @type {HTMLCanvasElement} */ (document.querySelector('#table'));
 const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
-const sim = new Simulation();
+const actuation = new URLSearchParams(location.search).get('actuation')==='solenoid'?'solenoid':'servo';
+const sim = new Simulation({actuation});
+const diagnostics=document.createElement('p');
+const calibrationLink=document.createElement('a');calibrationLink.href='calibration.html';calibrationLink.textContent='Flipper calibration →';
+calibrationLink.style.color='#f6ba72';diagnostics.append(calibrationLink);
+const comparison=document.createElement('a');comparison.href=actuation==='servo'?'?actuation=solenoid':'/';comparison.textContent=actuation==='servo'?'Try stroke / hold actuation →':'Return to servo actuation →';comparison.style.color='#f6ba72';
+diagnostics.append(document.createElement('br'),comparison);document.querySelector('.intro')?.append(diagnostics);
 const input = { left: false, right: false, reset: false };
 /** Tick-stamped full input snapshots, available for debugging. */
 const recording = [];
