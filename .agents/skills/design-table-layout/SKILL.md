@@ -19,4 +19,8 @@ Inspect `src/table.js`, relevant scenarios/tests, and current `STATUS.md` before
 
 Use `runShot` and timing searches for specific reachability/return questions, varying plausible arrivals rather than relying on a single favorable setup. Preserve reproducible scenarios and failed trials. Report target hits, sampled timing intervals, drains/censoring and low-speed diagnostics separately. Saved reports contain old table definitions; rerun common inputs against the new definition for comparisons. Full three-ball behavior needs `Simulation`, not the single-shot runner.
 
+For every important shot under review, test at least one plausible miss and one low-speed arrival. Check both for unintended traps, impossible clearance and indefinite passive cycles. Inspect suspicious outcomes; a time limit alone cannot prove an indefinite cycle. Record untested cases and uncertainty explicitly.
+
+Use the **Standard layout-review report** in `TABLE_DESIGN.md`: Shot, Origin, Reachable, Return, Problem, with scenario evidence and negative-test findings below the table. Keep stable shot names across reviews and scenarios. Shared shot metadata in the table definition is future work; introduce it only when several meaningful implemented shots need it, rather than adding a schema during documentation or isolated tuning.
+
 Iterate on the smallest relevant geometry before changing global actuator or material settings. Follow **Iteration and delivery** for checks and browser verification when implementing changes. Leave a short account of design intent, changed routes, evidence and unresolved playtesting questions. Never describe passing scenarios as proof of fun, fairness or realistic feel.

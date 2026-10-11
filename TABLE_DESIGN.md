@@ -8,6 +8,7 @@ The source summaries below are paraphrases. The workflow, calculations, diagnost
 
 - [Design brief and layout patterns](#design-brief-and-layout-patterns)
 - [Shot geometry](#shot-geometry)
+- [Shot identity](#shot-identity)
 - [Clearance and passive returns](#clearance-and-passive-returns)
 - [Component placement](#component-placement)
 - [Agency, difficulty and reward](#agency-difficulty-and-reward)
@@ -56,6 +57,24 @@ Draw an approach corridor, not just a centerline. Reserve room for the ball on b
 Use a geometric ray to identify candidate placements, then simulate contact. Launch direction depends on arrival velocity, where the ball meets the rubber, flipper angle and angular velocity, restitution and actuator state. A line drawn from the pivot does not capture those factors. Do not repair an inaccessible entrance by globally increasing motor strength before checking alignment and clearance.
 
 For a channel, a rectangle target should sit far enough inside the entrance to distinguish entering from brushing its mouth. Our rectangle detector follows the swept **ball center**; it does not establish whole-ball clearance or successful travel through the entire channel. Mechanism targets require a hit event. Choose the target that corresponds to the intended outcome and inspect the subsequent return separately.
+
+## Shot identity
+
+Use stable names for intended shots in design notes, scenario names and review reports so successes and failures can accumulate into comparable examples. A shot describes a route and player intention; it is not necessarily identical to a mechanism hit. Keep its entrance, completion condition and return destination distinct.
+
+When several meaningful implemented shots need common references across simulation, the laboratory, Rules and rendering, consider lightweight shot metadata in the table definition. The following is conceptual only; it is not the current schema or an instruction to implement it now:
+
+```js
+shots: [{
+  id: 'left-orbit',
+  origin: 'right-flipper',
+  entrance: 'left-orbit-entry',
+  completion: 'left-orbit-exit',
+  return: 'left-inlane',
+}]
+```
+
+Choose the eventual shape from actual consumers and routes, including shots with multiple origins. Metadata alone does not implement completion detection, scoring, or a return path. Until shared identity solves a concrete need, keep names in documentation and scenarios; do not introduce a registry, resolver or event framework for hypothetical shots.
 
 ## Clearance and passive returns
 
@@ -152,6 +171,8 @@ The browser laboratory is `shot-lab.html` relative to the site root, including u
 
 Use several plausible ball positions and speeds, both sides, and relevant resting/midstroke/held flipper states. Keep changing inputs separate from changing geometry. The starting state should correspond to a possible feed, not an arbitrary favorable placement inside an obstacle.
 
+For every important shot under review, test at least one plausible miss and one low-speed arrival. Examples include an off-center entrance approach, a weak shot that rebounds before completion, or a slow feed at a guide/post junction. Check both negative cases for unintended capture, impossible clearance and passive cycles that sustain play without control. Record initial states, commands, observation limits and outcomes. Inspect slow or repeated motion and extend a targeted observation when needed; timeout alone does not prove an indefinite cycle. Do not label an untested case safe.
+
 An illustrative single-shot scenario using the current CLI's default table:
 
 ```json
@@ -193,6 +214,26 @@ For example, sampled successes at ticks `8, 10, 12, 24` form a three-sample inte
 | Escape | Ball left modeled bounds | A normal drain |
 
 Heatmaps and metrics already use every physics tick, independently of trajectory downsampling. Keep this invariant. Review events and trajectories to locate the cause, then change the smallest relevant geometry. Save both failed and successful timing trials.
+
+### Standard layout-review report
+
+Use this compact format for layout reviews and before/after comparisons. State the table revision, actuator model and scenario family above the table. Keep shot names stable. Scope a narrow review to the affected shots; identify important omitted shots as untested.
+
+| Shot | Origin | Reachable | Return | Problem |
+| --- | --- | --- | --- | --- |
+| Left orbit | Right flipper | Yes, 4/25 sampled trials | Left inlane observed | Narrow sampled timing interval |
+| Center target | Either; list each tested side | Yes in tested setups | Chaotic rebound observed | None observed in tested cases |
+| Right ramp | Left flipper | Not reached, 0/25 sampled trials | Untested | Entrance obstruction confirmed by inspection |
+
+All rows above are illustrative, not measurements or implemented features of this table. In a real report, distinguish **not reached in tested trials** from proven geometric blockage, **untested** from failure, and intended returns from observed returns. Report each origin separately when results differ. "None observed" is limited to the stated evidence, not a blanket claim.
+
+Below the table, include:
+
+- **Evidence:** scenario/report paths, initial states or family identifiers, target/completion definitions, successful sampled timing intervals and spacing, observation limits and censoring. Tie each result to its shot and origin; compare the same inputs between revisions.
+- **Negative tests:** the plausible miss and low-speed arrival for each important shot, observed return/drain or candidate trap/cycle, and any unresolved diagnosis.
+- **Decision:** the smallest proposed or applied change, its measured effect, and outstanding human playtesting questions.
+
+Keep raw successes and failures as concrete examples of this runtime. Preserve useful scenarios and regressions in tracked files; ignored `results/` reports alone are not a durable design history. Avoid collapsing the report into an overall quality score.
 
 ## Ramps and elevation
 
