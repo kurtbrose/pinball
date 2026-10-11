@@ -2,30 +2,31 @@
 
 ## Working
 
-- Milestone 1 implemented: steel ball, playfield walls and return guides, two powered flippers, drain detection, fresh-ball reset.
-- Canvas presentation, keyboard controls, and pointer/touch flipper buttons.
-- Fixed 120 Hz simulation independent of rendering; tick-stamped command replay.
-- Type checking and six automated scenarios pass: replay, flipper travel, response time/overshoot, flipper contact energy transfer, fast wall rebound, drain/reset.
-- Flipper tuning after initial feedback: motor torque 80 → 400 N·m, maximum upstroke speed 22 → 30 rad/s, separate 22 rad/s return speed, and proportional braking near travel stops. Both flippers reach within 0.04 radians of raised position in 100 ms in the unloaded scenario.
+- First complete table: three-ball game, charged plunger, shooter lane, inlanes/outlanes, two powered flippers, rubber posts, three pop bumpers, two slingshots, tunable energetic center post, scoring and game over.
+- Ball drains advance after a short delay; shooter-lane returns permit another plunge. New game resets score and ball count.
+- Canvas presentation, activation flashes, keyboard controls, pointer/touch controls, and compact layout with the full table visible.
+- Simulation accepts an ordinary table definition. Pivots, walls, ball spawn, gravity and material settings are configurable. Original calibration fixture and playable layout remain separate definitions.
+- Physical mechanisms emit tick-stamped events; Rules consumes those events to apply table-defined points.
+- Servo remains the provisional baseline; stroke/hold comparison remains available. Neither has been accepted by human playtesting as realistic.
 
-## Validation and limits
+## Verification
 
-- Browser startup, rendered table, drain status, and reset interaction verified locally.
-- Planck 1.5.0 is the provisional physics choice. Revolute motors reach their limits and transfer upward momentum in a focused test; a 35 m/s wall scenario rebounds without tunneling. This does not cover every geometry/contact combination.
-- Human playtesting has not established that flippers feel convincing or shots are controllable.
-- No interpolated rendering yet; narrow screens scroll to fit the table.
-- No plunger, posts, bumpers, scoring, sounds, or three-ball rules. Those belong to later milestones.
-- Cross-platform bit-for-bit determinism is not promised. No random mechanisms exist yet.
+- Type checking and 20 automated tests pass, including a deterministic 20-shot calibration sweep, both fixture orders/unrelated-contact rejection, raised/midstroke arrivals, complete-table replay, both inlanes, configurable geometry/materials, seven launch charge levels with both actuator models, one-way shooter gate passage/deflection, quick-tap latching, shooter-lane return, mechanism events and kicks, separate scoring, three drains/game over/restart, and earlier collision/flipper scenarios.
+- Browser startup, full table rendering, Space launch and restart verified locally. No browser console errors observed.
+- Calibration remains available permanently at /calibration.html and through node scripts/calibrate.js.
+
+## Explicit limits
+
+- Deliberate arcade scale: 6 × 10 world units, gravity 5.5 units/s². Ball/flipper ratio on the playable table is approximately 0.343. Speeds have no real-machine calibration reference and should not be interpreted as regulation pinball speeds.
+- Surface rolling/sliding resistance and spin coupling remain simplified damping. Defer further tuning until gameplay identifies a problem.
+- No sound, elaborate modes, ramps, multiball, editor, or general mechanism framework.
+- Calibration arrivals are controlled flipper-state probes. Five-second rise measurements can be limited by the trial duration or a later contact.
+- Scenario tests cover specific cases; they do not guarantee that every fast collision or trajectory is stable or that the table is fun.
 
 ## Next priority
 
-Playtest flipper timing, aiming, drain frequency, and return guides. Tune the small table before authorizing Milestone 2.
+Human playtesting of the complete table: compare actuator models, evaluate aiming/catching and return paths, watch for stalls, and assess drain frequency. Choose the final actuation baseline from that feedback. Add one table/mechanism improvement at a time.
 
-## Actuation calibration experiment
+## Shooter exit correction
 
-- Added `/calibration.html` with animated shots and a 16-scenario comparison, plus `node scripts/calibrate.js` for full JSON measurements.
-- Servo remains the default. Experimental stroke/hold is available via `/?actuation=solenoid`. Both use Planck motors, contact impulses, and native travel stops.
-- Experiment holds scale, geometry, restitution, and damping constant; walls and the other flipper are removed from calibration trials.
-- Mid-flipper stationary exit speed: servo approximately 13.49 m/s at 92.1°, stroke/hold approximately 16.78 m/s at 98.3°. These are prototype units, not measurements of a real machine.
-- Nine scenarios/tests pass including full sweep repeatability, position-dependent shot results, and experimental hold/release lifecycle.
-- Surface rolling/spin coupling, realistic proportions, and return lanes remain unresolved. Experimental stop behavior and catching require human evaluation before changing the default.
+Full-strength launches could enter the playfield and then rebound through the open shooter mouth. Added a sloped one-way gate: upward launches pass, downward returns deflect left using native collision response. The launch regression now tracks 10 seconds after each of seven charge levels for both actuator models and rejects any shooter-return event, rather than accepting momentary playfield entry.
