@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Table Layout"
+  short_description: "Design and validate pinball shots and return paths"
+  default_prompt: "Use $design-table-layout to review or improve this pinball table's shot geometry and return paths."
