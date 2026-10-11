@@ -10,6 +10,7 @@ const calibrationLink=document.createElement('a');calibrationLink.href='calibrat
 calibrationLink.style.color='#f6ba72';diagnostics.append(calibrationLink);
 const comparison=document.createElement('a');comparison.href=actuation==='servo'?'?actuation=solenoid':'/';comparison.textContent=actuation==='servo'?'Try stroke / hold actuation →':'Return to servo actuation →';comparison.style.color='#f6ba72';
 diagnostics.append(document.createElement('br'),comparison);document.querySelector('.intro')?.append(diagnostics);
+const labLink=document.createElement('a');labLink.href='shot-lab.html';labLink.textContent='Shot laboratory →';labLink.style.color='#f6ba72';diagnostics.append(document.createElement('br'),labLink);
 const input = { left: false, right: false, reset: false,plunger:false,plungerRelease:false };
 /** Tick-stamped full input snapshots, available for debugging. */
 const recording = [];

@@ -1,0 +1,12 @@
+{
+  "name": "Left flipper approach",
+  "initial": { "x": 2.5, "y": 8.1, "vx": -0.4, "vy": 2 },
+  "ticks": 360,
+  "sampleEvery": 3,
+  "actuation": "servo",
+  "commands": [
+    { "tick": 8, "input": { "left": true } },
+    { "tick": 32, "input": {} }
+  ],
+  "target": { "mechanismId": "pop-center" }
+}

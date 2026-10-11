@@ -1,4 +1,4 @@
-import { World, Vec2, Edge, Circle, Box, Polygon, RevoluteJoint } from 'planck';
+import { World, Vec2, Edge, Circle, Box, Polygon, RevoluteJoint } from './physics.js';
 import { table as prototypeTable } from './table.js';
 import { Rules } from './rules.js';
 export const DT = 1 / 120;

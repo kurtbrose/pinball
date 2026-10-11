@@ -27,6 +27,17 @@
 
 Human playtesting of the complete table: compare actuator models, evaluate aiming/catching and return paths, watch for stalls, and assess drain frequency. Choose the final actuation baseline from that feedback. Add one table/mechanism improvement at a time.
 
+## Shot laboratory
+
+- `/shot-lab.html` runs editable scenarios in a module worker and displays trajectories, a scrubber, position heatmaps, events, metrics and timing success/failure overlays. Results can be downloaded as self-contained JSON.
+- `runShot` reconstructs a fresh world from the full table, initial ball state, optional flipper warmup and commands. `searchTimings` repeats that setup for candidate delays without arbitrary state cloning. CLI: `node scripts/shot-lab.js --help`.
+- Reports include observed survival/censoring, drain position, flipper contact episodes, hit distribution/coverage, low-speed runs, return crossings, target reachability, and all trajectory samples. Multiball is explicitly unsupported (`null`). No combined quality or fun score.
+- Type checking and 29 tests pass, including deterministic report replay, unchanged input definitions, sample-independent heatmaps/metrics, swept target crossings, drain termination, timeout/escape/stall distinctions, contact filtering, warmup and timing reconstruction.
+- The initial left-flipper sweep ran 25 three-second trials (9,000 physics ticks) in approximately 0.27 seconds on this environment. 21 timings reached the center bumper; all 25 observations were time-limited. This measures reachability in one setup, not full-game balance.
+- A diagnostic finding for the next table pass: after 60 ticks of left-flipper hold, its angle is approximately -0.257 radians on the full table versus the configured -0.5. Removing the slingshots in a controlled definition restores the full stroke. The lab exposes this collision; gameplay geometry has not been retuned in this change.
+- Automated players, game batches, multi-objective layout optimization and real-world physics calibration remain later stages. Human playtesting remains necessary.
+- Browser verification: automatic shot execution, worker timing search (21/25, matching Node), selection of an unsuccessful timing and trajectory scrubbing all work. A worker-ready handshake prevents early messages being lost during asynchronous physics-module loading.
+
 ## Shooter exit correction
 
 Full-strength launches could enter the playfield and then rebound through the open shooter mouth. Added a sloped one-way gate: upward launches pass, downward returns deflect left using native collision response. The launch regression now tracks 10 seconds after each of seven charge levels for both actuator models and rejects any shooter-return event, rather than accepting momentary playfield entry.
