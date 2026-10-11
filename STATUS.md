@@ -48,3 +48,12 @@ Full-strength launches could enter the playfield and then rebound through the op
 - Fixed play/back links and the servo comparison link to stay inside the deployment subdirectory.
 - Type checking and all 29 scenarios pass. Browser launch, restart and shot-worker execution verified under /pinball/ on a static server that rejects node_modules requests.
 
+
+## Drainability after playtesting feedback
+
+- Removed the powered center-save post so center misses can drain without an automatic kick back into play.
+- Reversed uphill inlane guide ramps to descend toward the flipper pivots, removing the left resting pocket. Moved the right lane post/guide left by 0.1 units to leave ball-diameter clearance beside the shooter divider.
+- Type checking and all 30 tests pass, including natural three-ball game-over runs with quick, half and full launches, both actuator models, and either released or continuously held flippers. No ball teleportation or drain timer is used in this regression.
+- A separate seven-charge servo probe drained all sampled shots, released or held, within 50 seconds. These specific trajectories demonstrate drainability; they do not establish gameplay balance or feel.
+
+- Browser verification: quick Space launch scored 400, drained naturally, and advanced to ball 2 with the plunger ready.

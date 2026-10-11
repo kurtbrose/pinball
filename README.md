@@ -1,6 +1,6 @@
 # Browser Pinball — First contact
 
-A complete small three-ball table: two flippers, a charged plunger, three pop bumpers, rubber posts, an energetic center save post, slingshots, inlanes/outlanes, scoring, and game over. Static HTML, Canvas, JavaScript modules and Planck 1.5.0; no build step or backend.
+A complete small three-ball table: two flippers, a charged plunger, three pop bumpers, rubber posts, slingshots, inlanes/outlanes, scoring, and game over. Static HTML, Canvas, JavaScript modules and Planck 1.5.0; no build step or backend.
 
 ## Run
 

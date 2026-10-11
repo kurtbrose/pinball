@@ -60,6 +60,20 @@ test('three drains end the game, reset starts a clean game',()=>{
   for(let i=0;i<200;i++)sim.step({plunger:true});assert.equal(sim.phase,'gameover');assert.equal(sim.drains,3);
   sim.step({reset:true});assert.equal(sim.phase,'ready');assert.equal(sim.drains,0);assert.equal(sim.ballNumber,1);assert.equal(sim.rules.score,0);
 });
+test('unattended launches naturally drain through a complete three-ball game',()=>{
+  for(const actuation of ['servo','solenoid'])for(const held of [false,true]){
+    const sim=new Simulation({actuation},firstTable);
+    for(const charge of [0,45,90]){
+      assert.equal(sim.phase,'ready');
+      for(let i=0;i<charge;i++)sim.step({plunger:true});
+      sim.step({plungerRelease:true});
+      for(let i=0;i<7200&&sim.phase==='playing';i++)sim.step({left:held,right:held});
+      assert.ok(sim.phase==='draining'||sim.phase==='gameover',`${actuation}, held=${held}, charge=${charge} drains within 60 seconds`);
+      while(sim.phase==='draining')sim.step();
+    }
+    assert.equal(sim.phase,'gameover');assert.equal(sim.drains,3);
+  }
+});
 test('bumper emits an event, adds explicit kick and rules score separately',()=>{
   const isolated={...firstTable,mechanisms:firstTable.mechanisms.filter(m=>m.id==='pop-left'),walls:[]};
   const sim=new Simulation({},isolated);sim.phase='playing';

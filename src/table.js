@@ -40,8 +40,10 @@ export const firstTable = {
     [[.35,9.8],[.35,1.2]],[[.35,1.2],[1.2,.35]],
     [[1.2,.35],[4.8,.35]],[[4.8,.35],[5.65,1.2]],[[5.65,1.2],[5.65,9.3]],
     [[5.1,1.85],[5.1,9.3]],[[5.1,9.3],[5.65,9.3]],
-    [[.9,6.3],[.9,8.65]],[[.9,8.65],[1.65,8.2]],
-    [[4.65,6.3],[4.65,8.65]],[[4.65,8.65],[4.35,8.2]],
+    // Inlane guides slope downhill toward the flipper pivots, without pockets.
+    [[.9,6.3],[.9,7.85]],[[.9,7.85],[1.65,8.2]],
+    // Leave ball-diameter clearance between the lane post and shooter divider.
+    [[4.55,6.3],[4.55,7.85]],[[4.55,7.85],[4.35,8.2]],
   ],
   mechanisms:[
     {id:'pop-left',type:/** @type {const} */('bumper'),x:2,y:2.7,radius:.38,kick:6},
@@ -50,8 +52,7 @@ export const firstTable = {
     {id:'post-left',type:/** @type {const} */('post'),x:1.25,y:5.1,radius:.16,kick:0},
     {id:'post-right',type:/** @type {const} */('post'),x:4.4,y:5.1,radius:.16,kick:0},
     {id:'lane-left',type:/** @type {const} */('post'),x:.9,y:6.3,radius:.13,kick:0},
-    {id:'lane-right',type:/** @type {const} */('post'),x:4.65,y:6.3,radius:.13,kick:0},
-    {id:'center-save',type:/** @type {const} */('post'),x:3,y:9.05,radius:.15,kick:5},
+    {id:'lane-right',type:/** @type {const} */('post'),x:4.55,y:6.3,radius:.13,kick:0},
     {id:'sling-left',type:/** @type {const} */('sling'),x:1.7,y:7.1,radius:0,kick:5,vertices:[[1.4,6.4],[1.4,7.6],[2.25,7.9]],direction:[1,-1]},
     {id:'sling-right',type:/** @type {const} */('sling'),x:3.95,y:7.1,radius:0,kick:5,vertices:[[4.15,6.4],[3.45,7.9],[4.15,7.6]],direction:[-1,-1]},
   ],
