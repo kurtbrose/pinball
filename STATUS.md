@@ -41,3 +41,10 @@ Human playtesting of the complete table: compare actuator models, evaluate aimin
 ## Shooter exit correction
 
 Full-strength launches could enter the playfield and then rebound through the open shooter mouth. Added a sloped one-way gate: upward launches pass, downward returns deflect left using native collision response. The launch regression now tracks 10 seconds after each of seven charge levels for both actuator models and rejects any shooter-return event, rather than accepting momentary playfield entry.
+
+## Static GitHub Pages deployment
+
+- Vendored Planck 1.5.0 with its source map and MIT license. Browser pages, module workers and headless scenarios use the same checked-in module; no runtime node_modules or build step is needed.
+- Fixed play/back links and the servo comparison link to stay inside the deployment subdirectory.
+- Type checking and all 29 scenarios pass. Browser launch, restart and shot-worker execution verified under /pinball/ on a static server that rejects node_modules requests.
+

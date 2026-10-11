@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pinball / Shot laboratory</title><link rel="stylesheet" href="shot-lab.css"><script type="importmap">{"imports":{"planck":"./node_modules/planck/dist/planck.mjs"}}</script></head>
-<body><header><a href="/">← Play table</a><span>PINBALL LAB / DIAGNOSTICS</span><a href="calibration.html">Flipper calibration →</a></header>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pinball / Shot laboratory</title><link rel="stylesheet" href="shot-lab.css"><script type="importmap">{"imports":{"planck":"./vendor/planck.mjs"}}</script></head>
+<body><header><a href="./">← Play table</a><span>PINBALL LAB / DIAGNOSTICS</span><a href="calibration.html">Flipper calibration →</a></header>
 <main><section class="settings"><p class="eyebrow">REPRODUCIBLE PHYSICS</p><h1>Shot laboratory</h1><p class="muted">Inspect one shot, then explore how its trajectory changes with flipper timing.</p>
 <label for="preset">Starting scenario</label><select id="preset"><option value="left">Left flipper approach</option><option value="right">Right flipper approach</option><option value="shooter">Full-strength shooter exit</option></select>
 <label for="scenario">Scenario JSON</label><textarea id="scenario" spellcheck="false" rows="16" aria-describedby="json-help"></textarea><p id="json-help" class="muted small">Ticks at 120 Hz. Commands replace held left/right inputs. Omit “table” to use First contact, or include a complete definition. You can paste a saved shot report here to replay it.</p>

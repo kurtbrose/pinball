@@ -1,0 +1,1 @@
+Planck 1.5.0, copied without modification from the pinned planck package: dist/planck.mjs, dist/planck.mjs.map, and LICENSE.txt (renamed planck-LICENSE.txt). Source: https://github.com/piqnt/planck.js . Update these files together with package.json/pnpm-lock.yaml when upgrading; run node scripts/check.js.

@@ -47,7 +47,7 @@ Measurements only accept contacts between the ball and the tested flipper, in ei
 
 Exit velocity is sampled after the initial 16 measured ticks and three ticks without an impact impulse, avoiding transient fixture separations. Rise ends at the apex, next impact, or five-second trial limit. Peak contact speed is the maximum absolute post-solver angular speed over the initial contact sequence. Midstroke/raised cases warm up the flipper away from the ball, then introduce an incoming ball just outside the current rubber surface. They are controlled state probes, not complete inlane approach trajectories.
 
-For static deployment, include `node_modules/planck/dist/planck.mjs` and its license, or copy it to a vendor folder and adjust the import map. The local development server is not a production server.
+Static deployment needs no install or build step. Planck 1.5.0 is checked in at `vendor/planck.mjs`, with its source map and MIT license. Browser play, workers and Node scenarios load this same copy; the package dependency supplies declarations for type checking. Serve the repository as static files, including `vendor/`. Relative assets and navigation work under the GitHub Pages `/pinball/` prefix. When upgrading Planck, update the package version and vendored module, map and license together, then run checks. The local development server is not a production server.
 
 ## Headless shot laboratory
 
