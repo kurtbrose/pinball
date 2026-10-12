@@ -1,7 +1,7 @@
 import { Vec2 } from './physics.js';
 import { Simulation, DT } from './simulation.js';
 
-/** @typedef {{left?:boolean,right?:boolean}} FlipperInput */
+/** @typedef {{left?:boolean,right?:boolean,nudge?:{x:number,y:number}}} FlipperInput */
 /** @typedef {{tick:number,input:FlipperInput}} ShotCommand */
 /** @typedef {{id:string,x:number,y:number,width:number,height:number}|{mechanismId:string}} ShotTarget */
 /** @typedef {{name?:string,table:typeof import('./table.js').table,initial:{x:number,y:number,vx:number,vy:number,angle?:number,spin?:number},commands?:ShotCommand[],ticks?:number,sampleEvery?:number,actuation?:'servo'|'solenoid',warmup?:{ticks:number,input:FlipperInput},target?:ShotTarget,heatmap?:{columns:number,rows:number},slowSpeed?:number,stuckAfterTicks?:number}} ShotSpec */
@@ -37,7 +37,7 @@ function validate(spec){
   for(const command of spec.commands??[]){
     integer(command.tick,0,(spec.ticks??600)-1,'command tick');
     if(command.tick<=previous)throw new Error('Commands must have unique, increasing ticks');previous=command.tick;
-    if(!command.input||Object.entries(command.input).some(([key,value])=>!['left','right'].includes(key)||typeof value!=='boolean'))throw new Error('Shot commands accept only boolean left/right inputs');
+    if(!command.input||Object.entries(command.input).some(([key,value])=>key==='nudge'? !value||typeof value!=='object'||!('x' in value)||!('y' in value)||typeof value.x!=='number'||typeof value.y!=='number'||!Number.isFinite(value.x)||!Number.isFinite(value.y)||Math.hypot(value.x,value.y)>1+1e-12 : !['left','right'].includes(key)||typeof value!=='boolean'))throw new Error('Shot commands accept boolean left/right and a finite nudge vector of magnitude at most 1');
   }
   if(spec.warmup?.input&&Object.entries(spec.warmup.input).some(([key,value])=>!['left','right'].includes(key)||typeof value!=='boolean'))throw new Error('Warmup accepts only boolean left/right inputs');
   if(spec.target){
@@ -148,4 +148,25 @@ export function searchTimings(spec,search){
     const result=runShot({...spec,commands});
     return {delay,holdTicks:search.holdTicks,side:search.side,result};
   });
+}
+
+/** Compare identical arrivals without a nudge and with direction/strength/timing variants.
+ * Vectors describe the resulting ball motion relative to the table (+x right, +y down).
+ * Commands are generated as full snapshots; optional flipper input is held throughout.
+ * @param {ShotSpec} spec
+ * @param {{delays:number[],vectors:{x:number,y:number}[],input?:{left?:boolean,right?:boolean}}} search */
+export function searchNudges(spec,search){
+  if(spec.commands?.length)throw new Error('Nudge search generates commands; base commands must be empty');
+  if(!search.delays.length||!search.vectors.length||search.delays.length*search.vectors.length>1000)throw new Error('Nudge search needs 1–1000 variants');
+  for(const delay of search.delays)integer(delay,0,(spec.ticks??600)-1,'nudge delay');
+  const input=search.input??{};
+  const baseline=runShot({...spec,commands:[{tick:0,input}]});
+  const trials=search.delays.flatMap(delay=>search.vectors.map(nudge=>{
+    /** @type {ShotCommand[]} */
+    const commands=delay?[{tick:0,input}]:[];
+    commands.push({tick:delay,input:{...input,nudge}});
+    if(delay+1<(spec.ticks??600))commands.push({tick:delay+1,input});
+    return {delay,nudge:{...nudge},result:runShot({...spec,commands})};
+  }));
+  return {baseline,trials};
 }

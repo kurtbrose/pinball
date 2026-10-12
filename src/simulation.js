@@ -2,7 +2,7 @@ import { World, Vec2, Edge, Circle, Box, Polygon, RevoluteJoint } from './physic
 import { table as prototypeTable } from './table.js';
 import { Rules } from './rules.js';
 export const DT = 1 / 120;
-/** @typedef {{left?: boolean, right?: boolean, reset?: boolean, plunger?:boolean, plungerRelease?:boolean}} Command */
+/** @typedef {{left?: boolean, right?: boolean, reset?: boolean, plunger?:boolean, plungerRelease?:boolean,nudge?:{x:number,y:number}}} Command */
 export class Simulation {
   /** @param {{actuation?: 'servo'|'solenoid', isolated?: boolean}} [options] @param {typeof prototypeTable} [definition] */
   constructor(options = {}, definition = prototypeTable) {
@@ -22,6 +22,8 @@ export class Simulation {
     this.cooldowns=/** @type {Map<string,number>} */(new Map());
     this.actuation = options.actuation ?? 'servo';
     this.tick = 0;
+    this.nudgeHeld=false;
+    this.nextNudgeTick=0;
     this.drains = 0;
     this.drained = false;
     this.world = new World(Vec2(0, table.gravity));
@@ -80,9 +82,11 @@ export class Simulation {
   }
   /** @param {Command} [input] */
   step(input = {}) {
+    const nudge=input.nudge;
+    if(nudge&&(!Number.isFinite(nudge.x)||!Number.isFinite(nudge.y)||Math.hypot(nudge.x,nudge.y)>1+1e-12))throw new Error('Nudge must be a finite vector of magnitude at most 1');
     const table=this.table;
     this.events=[];
-    if (input.reset) {this.rules.score=0;this.drains=0;this.ballNumber=1;this.cooldowns.clear();this.resetBall();}
+    if (input.reset) {this.rules.score=0;this.drains=0;this.ballNumber=1;this.cooldowns.clear();this.nextNudgeTick=0;this.resetBall();}
     if(this.phase==='draining' && this.tick>=this.resetAt){this.ballNumber++;this.resetBall();}
     if(this.phase==='ready'){
       if(input.plunger)this.pullTicks=Math.min(table.plunger.maxPullTicks,this.pullTicks+1);
@@ -108,6 +112,14 @@ export class Simulation {
         joint.setMotorSpeed(Math.max(-speed, Math.min(speed, (target - joint.getJointAngle()) * 60)));
       }
     });
+    const nudging=!!nudge&&(nudge.x!==0||nudge.y!==0);
+    if(nudging&&!this.nudgeHeld&&this.tick>=this.nextNudgeTick&&this.phase==='playing'&&!this.drained&&!this.isolated&&table.nudge.velocity>0){
+      // Effective ball velocity relative to the table; fixtures remain fixed.
+      this.ball.applyLinearImpulse(Vec2(nudge.x*table.nudge.velocity*this.ball.getMass(),nudge.y*table.nudge.velocity*this.ball.getMass()),this.ball.getWorldCenter(),true);
+      this.nextNudgeTick=this.tick+table.nudge.cooldownTicks;
+      this.events.push({type:'table.nudge',id:'nudge',tick:this.tick});
+    }
+    this.nudgeHeld=nudging;
     this.world.step(DT, 10, 4);
     for(const mechanism of this.pending){
       if(this.tick<(this.cooldowns.get(mechanism.id)??0))continue;

@@ -56,6 +56,7 @@ Full-strength launches could enter the playfield and then rebound through the op
 - Added dependency-free Pages packaging: `node scripts/build-pages.js` / `pnpm run build:pages`. HTML references content-versioned CSS, the full module graph, module worker and vendored physics in `dist/assets/<hash>/`; unchanged source bytes preserve the Node/browser physics baseline.
 - Added `.github/workflows/pages.yml` for `main` and manual dispatch. It restores the last successful Pages artifact when available, preserving old asset paths for cached HTML/open tabs, then packages and deploys `dist/`. Artifact retention is 90 days. Requires Pages publishing source **GitHub Actions**; remote settings and deployment have not been changed in this session.
 - Type checking and all 36 tests pass. An isolated Edge test with caching enabled under `/pinball/` verified two asset versions, fresh table code after reload, a still-working old-tab worker, the new worker, launch and all 20 calibration rows; no browser errors. Existing HTML can remain cached until revalidation; assets update together when fresh HTML is loaded.
+- Live publishing diagnosis: the first custom deployment succeeded, then the legacy branch publisher finished 18 seconds later and overwrote it with unversioned HTML. Added an explicit publishing-mode guard to the workflow. Set Pages Source to GitHub Actions and rerun deployment to stop the competing publisher; the repository setting has not been changed locally.
 
 - Vendored Planck 1.5.0 with its source map and MIT license. Browser pages, module workers and headless scenarios use the same checked-in module; no runtime node_modules or build step is needed.
 - Fixed play/back links and the servo comparison link to stay inside the deployment subdirectory.
@@ -70,3 +71,9 @@ Full-strength launches could enter the playfield and then rebound through the op
 - A separate seven-charge servo probe drained all sampled shots, released or held, within 50 seconds. These specific trajectories demonstrate drainability; they do not establish gameplay balance or feel.
 
 - Browser verification: quick Space launch scored 400, drained naturally, and advanced to ball 2 with the plunger ready.
+
+## Directional nudge evaluation
+
+- Added tick-stamped nudge vectors to simulation and shot commands: magnitude at most 1, resulting ball motion relative to the fixed table, +x right/+y down. Browser Z/X/C bump left/up/right. Each press applies up to 1.2 arcade velocity units with a 30-tick cooldown; held input does not repeat. Ready, drained, game-over and isolated calibration states do not receive jolts. Prototype calibration disables nudges. No cabinet calibration or tilt mechanic is claimed.
+- Added searchNudges and scripts/nudge-review.js: 24 matched lower-feed baselines with released/held flippers and 288 direction/strength/delay variants. At five seconds, 284 variants drained and four were censored. Contacts and trajectories remain separate; these probes do not establish controllable feeds or fair difficulty. Reports can be regenerated from the tracked script.
+- Type checking and all 39 tests pass, including bounded input, cooldown, held-input suppression, inactive phases, deterministic replay/report reconstruction and a controlled near-drain recovery comparison. Edge startup, launch and all three keyboard-generated physics nudge events verified without page errors. Lower-playfield geometry is unchanged; human playtesting and return-path improvements remain outstanding.

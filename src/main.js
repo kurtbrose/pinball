@@ -11,7 +11,7 @@ calibrationLink.style.color='#f6ba72';diagnostics.append(calibrationLink);
 const comparison=document.createElement('a');comparison.href=actuation==='servo'?'?actuation=solenoid':'./';comparison.textContent=actuation==='servo'?'Try stroke / hold actuation →':'Return to servo actuation →';comparison.style.color='#f6ba72';
 diagnostics.append(document.createElement('br'),comparison);document.querySelector('.intro')?.append(diagnostics);
 const labLink=document.createElement('a');labLink.href='shot-lab.html';labLink.textContent='Shot laboratory →';labLink.style.color='#f6ba72';diagnostics.append(document.createElement('br'),labLink);
-const input = { left: false, right: false, reset: false,plunger:false,plungerRelease:false };
+const input = { left: false, right: false, reset: false,plunger:false,plungerRelease:false,nudge:{x:0,y:0} };
 /** Tick-stamped full input snapshots, available for debugging. */
 const recording = [];
 /** @param {KeyboardEvent} event @param {boolean} pressed */
@@ -21,6 +21,8 @@ function key(event, pressed) {
   if (event.code==='KeyD'||event.code==='ArrowRight') input.right=pressed;
   if (event.code==='Space'){if(!pressed&&input.plunger)input.plungerRelease=true;input.plunger=pressed;}
   if (event.code==='KeyR' && pressed && !event.repeat) input.reset=true;
+  const nudges=/** @type {Record<string,{x:number,y:number}>} */({KeyZ:{x:-1,y:0},KeyX:{x:0,y:-1},KeyC:{x:1,y:0}});
+  if(nudges[event.code]&&pressed&&!event.repeat)input.nudge=nudges[event.code];
 }
 addEventListener('keydown', e=>key(e,true));addEventListener('keyup',e=>key(e,false));
 addEventListener('blur',()=>{input.left=false;input.right=false;input.plunger=false;});
@@ -38,7 +40,7 @@ function frame(now) {
   while(accumulator>=DT){
     const encoded=JSON.stringify(input);
     if(encoded!==previous){recording.push({tick:sim.tick,input:{...input}});previous=encoded;}
-    sim.step(input);input.reset=false;input.plungerRelease=false;accumulator-=DT;
+    sim.step(input);input.reset=false;input.plungerRelease=false;input.nudge={x:0,y:0};accumulator-=DT;
   }
   const state=sim.snapshot(); render(ctx,state);
   const score=document.querySelector('#score');if(score)score.textContent=state.score.toLocaleString();

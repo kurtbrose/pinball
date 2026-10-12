@@ -131,6 +131,20 @@ Drain fairness needs human feedback. A drain after an uncontrolled miss may be a
 
 Compare released-flipper and continuously-held behavior as diagnostics. Both should be checked for geometry traps and unintended indefinite play. Do not require every initial state to drain within a fixed deadline: some deliberate cradles or trajectories legitimately survive. Keep any regression deadline specific to its scenario and intended behavior.
 
+### Lower-playfield control review
+
+Directional arcade nudges are available in shot commands as `nudge:{x,y}` (magnitude at most 1; +x right, +y down). They apply a table-configured relative ball velocity jolt on a rising input edge, with a cooldown; release before another attempt. `searchNudges` in `src/shot-lab.js` compares a no-nudge baseline with direction, strength and delay variants, optionally holding flippers. `node scripts/nudge-review.js results/nudge-review.json` runs matched lower-feed families and retains complete reports. Inspect contacts and responses; longer survival alone does not prove control. Prototype calibration disables nudges.
+
+For broad refinement, punishing-drain feedback, or changes to lower guides and returns, explicitly review both sides of the flipper area. Drainability is a separate requirement: removing a pocket must not silently turn an ordinary inlane feed into a loss route.
+
+Identify each protected inlane path, its transition onto the flipper, and the separate outlane loss path. Inspect protection beside each outer flipper end/pivot: can a normal feed slip behind or outside the paddle without a playable contact? Lower guides should deliver balls into the flipper's usable contact region with full-ball clearance through its sweep. A safe feed means an opportunity for control, not guaranteed survival or a stationary pocket. Validate deliberate exceptions against the intended difficulty and player feedback.
+
+Probe plausible arrivals along each inlane and beside each outer flipper end, including slow feeds and nearby lateral misses. Vary arrival position, downward/lateral speed, and released, moving and held flipper states; search activation timing where relevant. Trace actual successful-shot returns into this area too, rather than using only convenient synthetic starts. Compare the same scenario families before and after a change.
+
+Record whether each arrival offers a catch, hold or redirection opportunity, bypasses the usable paddle region, drains, or becomes trapped. Support control claims with observed contact and subsequent response to inputs; crossing a return line or merely touching a flipper is insufficient. Keep these outcomes and sampled timing intervals separate from survival statistics. No universal safe-area size or acceptable success percentage is implied; describe the tested range and leave untested arrivals explicit.
+
+In browser play, check ordinary returns on both sides and whether the player can recognize and use the control opportunity. Headless scenarios establish behavior for supplied arrivals and inputs, not human reaction difficulty or fair feel. If browser play or human feedback remains outstanding, state that limitation instead of treating passing mechanical checks as completion of the control review.
+
 ## Working from real layouts
 
 Prefer overhead diagrams or photographs where the flippers and guides can be identified. Mission Pinball discusses aligning reference imagery to the proposed layout before borrowing a shot. [Source: Planning Layout with CAD](https://missionpinball.org/dev/physical_building/planning_layout_with_cad/)
@@ -211,6 +225,7 @@ For example, sampled successes at ticks `8, 10, 12, 24` form a three-sample inte
 | Extended low speed | Candidate hangup worth inspecting | Accidental cup rather than a valid catch |
 | Concentrated heatmap/hits | Frequent occupancy or contacts | An enjoyable or balanced region |
 | Return crossing | Downward passage across a diagnostic line | A controllable feed or catch |
+| Controllable feed in sampled trials | Observed catch, hold or redirection with stated arrivals and inputs | Forgiving timing, all returns or human usability |
 | Escape | Ball left modeled bounds | A normal drain |
 
 Heatmaps and metrics already use every physics tick, independently of trajectory downsampling. Keep this invariant. Review events and trajectories to locate the cause, then change the smallest relevant geometry. Save both failed and successful timing trials.
@@ -231,6 +246,7 @@ Below the table, include:
 
 - **Evidence:** scenario/report paths, initial states or family identifiers, target/completion definitions, successful sampled timing intervals and spacing, observation limits and censoring. Tie each result to its shot and origin; compare the same inputs between revisions.
 - **Negative tests:** the plausible miss and low-speed arrival for each important shot, observed return/drain or candidate trap/cycle, and any unresolved diagnosis.
+- **Lower-playfield control (when applicable):** left and right protected feeds, outer-end bypasses and distinct loss routes; arrival/state coverage, observed control responses, browser findings and unresolved human feedback. Include these as return rows even when they are not scoring shots.
 - **Decision:** the smallest proposed or applied change, its measured effect, and outstanding human playtesting questions.
 
 Keep raw successes and failures as concrete examples of this runtime. Preserve useful scenarios and regressions in tracked files; ignored `results/` reports alone are not a durable design history. Avoid collapsing the report into an overall quality score.

@@ -26,6 +26,15 @@ jobs:
           package-manager-cache: false
       - name: Verify asset packaging
         run: node --test test/pages.test.js
+      - name: Require GitHub Actions publishing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mode=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type')
+          if [ "$mode" != workflow ]; then
+            echo "::error::Pages is still branch-based. In Settings > Pages > Build and deployment, set Source to GitHub Actions, then rerun this workflow. Otherwise the legacy publisher can overwrite this deployment."
+            exit 1
+          fi
       - uses: actions/configure-pages@v5
       - name: Retain assets for cached HTML and open tabs
         env:

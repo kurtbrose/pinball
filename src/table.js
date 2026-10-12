@@ -24,6 +24,7 @@ export const table = {
   mechanisms: /** @type {{id:string,type:'post'|'bumper'|'sling',x:number,y:number,radius:number,kick:number,vertices?:number[][],direction?:number[]}[]} */ ([]),
   game:{enabled:false,balls:3,drainY:10.3,resetDelay:90},
   plunger:{maxPullTicks:90,minSpeed:8,maxSpeed:16},
+  nudge:{velocity:0,cooldownTicks:30},
   points:{'post.hit':10,'bumper.hit':100,'sling.hit':50},
 };
 
@@ -31,6 +32,8 @@ export const table = {
 // Keep the prototype dynamics while adding a full layout and clearer proportions.
 export const firstTable = {
   ...table, ballRadius:0.18, flipperLength:1.05,
+  // Arcade table-frame jolt, not a calibrated cabinet movement model.
+  nudge:{velocity:1.2,cooldownTicks:30},
   plunger:{maxPullTicks:90,minSpeed:11,maxSpeed:16},
   spawn:{x:5.38,y:8.96,vx:0,vy:0},
   game:{enabled:true,balls:3,drainY:10.3,resetDelay:90},
