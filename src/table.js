@@ -43,10 +43,10 @@ export const firstTable = {
     [[.35,9.8],[.35,1.2]],[[.35,1.2],[1.2,.35]],
     [[1.2,.35],[4.8,.35]],[[4.8,.35],[5.65,1.2]],[[5.65,1.2],[5.65,9.3]],
     [[5.1,1.85],[5.1,9.3]],[[5.1,9.3],[5.65,9.3]],
-    // End feeds above the heels: continuing to the pivots forms a ball pocket.
-    [[.9,6.3],[.9,7.3]],[[.9,7.3],[1.9,7.5]],
-    // Wider right inlane and outlane, with a matching downhill feed.
-    [[4.5,6.3],[4.5,7.3]],[[4.5,7.3],[4.3,7.6]],
+    // Continuous downhill protection joins the outer heels. Held catches must
+    // release when the paddle lowers; outlanes remain outside these guides.
+    [[.9,6.3],[.9,7.3]],[[.9,7.3],[1.65,8.2]],
+    [[4.5,6.3],[4.5,7.3]],[[4.5,7.3],[4.35,8.2]],
   ],
   mechanisms:[
     {id:'pop-left',type:/** @type {const} */('bumper'),x:2,y:2.7,radius:.38,kick:6},

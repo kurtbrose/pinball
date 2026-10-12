@@ -56,3 +56,15 @@ test('both flippers retain access to every bumper across different arrival speed
     assert.ok(trials.some(t=>t.result.metrics.targetReached),`${side}, vy=${vy}, ${mechanismId}`);
   }
 });
+
+test('protected outer-heel feeds offer timed redirection without a rescue nudge',()=>{
+  const before=JSON.parse(readFileSync(new URL('../scenarios/layout-before-protected-feeds.json',import.meta.url),'utf8'));
+  for(const vx of [-.4,0,.4]){
+    const spec={initial:{x:1.5,y:7.6,vx,vy:2},ticks:1200,target:{x:1,y:6.1,width:3.8,height:.15}};
+    const search={side:'left',delays:Array.from({length:13},(_,i)=>i*8),holdTicks:24};
+    const old=searchTimings({...spec,table:before},search);
+    const revised=searchTimings({...spec,table:firstTable},search);
+    assert.equal(old.some(t=>t.result.metrics.targetReached),false);
+    assert.ok(revised.filter(t=>t.result.metrics.targetReached).length>=3);
+  }
+});
