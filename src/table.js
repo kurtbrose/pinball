@@ -21,6 +21,7 @@ export const table = {
   },
   damping:{linear:0.025,angular:0.02},
   gates: /** @type {{id:string,a:number[],b:number[],allowedDirection:number[]}[]} */([]),
+  guides: /** @type {{a:number[],b:number[],restitution:number}[]} */([]),
   mechanisms: /** @type {{id:string,type:'post'|'bumper'|'sling',x:number,y:number,radius:number,kick:number,vertices?:number[][],direction?:number[]}[]} */ ([]),
   game:{enabled:false,balls:3,drainY:10.3,resetDelay:90},
   plunger:{maxPullTicks:90,minSpeed:8,maxSpeed:16},
@@ -39,6 +40,8 @@ export const firstTable = {
   game:{enabled:true,balls:3,drainY:10.3,resetDelay:90},
   // Pass an upward plunge; deflect returning balls left into the playfield.
   gates:[{id:'shooter-exit',a:[5.1,1.85],b:[5.65,1.3],allowedDirection:[0,-1]}],
+  // Passive collectors absorb the normal bounce and roll wall returns inward.
+  guides:[{a:[.35,4.9],b:[.9,5.75],restitution:.05},{a:[5.1,4.9],b:[4.55,5.75],restitution:.05}],
   walls:[
     [[.35,9.8],[.35,1.2]],[[.35,1.2],[1.2,.35]],
     [[1.2,.35],[4.8,.35]],[[4.8,.35],[5.65,1.2]],[[5.65,1.2],[5.65,9.3]],
@@ -52,12 +55,12 @@ export const firstTable = {
     {id:'pop-left',type:/** @type {const} */('bumper'),x:2,y:2.7,radius:.38,kick:6},
     {id:'pop-right',type:/** @type {const} */('bumper'),x:3.75,y:2.7,radius:.38,kick:6},
     {id:'pop-center',type:/** @type {const} */('bumper'),x:2.85,y:4,radius:.38,kick:6},
-    {id:'post-left',type:/** @type {const} */('post'),x:1.25,y:5.1,radius:.16,kick:0},
-    {id:'post-right',type:/** @type {const} */('post'),x:4.4,y:5.1,radius:.16,kick:0},
+    {id:'post-left',type:/** @type {const} */('post'),x:1.25,y:4.7,radius:.16,kick:0},
+    {id:'post-right',type:/** @type {const} */('post'),x:4.4,y:4.7,radius:.16,kick:0},
     {id:'lane-left',type:/** @type {const} */('post'),x:.9,y:6.3,radius:.13,kick:0},
     {id:'lane-right',type:/** @type {const} */('post'),x:4.5,y:6.3,radius:.13,kick:0},
     // Short slings leave full-ball room above the raised flippers and guide exits.
     {id:'sling-left',type:/** @type {const} */('sling'),x:1.85,y:6.7,radius:0,kick:5,vertices:[[1.65,6.4],[1.65,6.85],[2.25,7.0]],direction:[1,-1]},
-    {id:'sling-right',type:/** @type {const} */('sling'),x:3.8,y:6.7,radius:0,kick:5,vertices:[[3.9,6.4],[3.6,7.0],[3.9,6.85]],direction:[-1,-1]},
+    {id:'sling-right',type:/** @type {const} */('sling'),x:3.65,y:6.7,radius:0,kick:5,vertices:[[3.75,6.4],[3.45,7.0],[3.75,6.85]],direction:[-1,-1]},
   ],
 };

@@ -19,7 +19,7 @@ export function render(ctx, state, showWalls = true) {
     ctx.fill();ctx.stroke();
     if(m.type==='bumper'){ctx.beginPath();ctx.arc(m.x,m.y,m.radius*.65,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#142b35';ctx.font='.13px Arial';ctx.fillText('100',m.x,m.y+.04);}
   }
-  for (const [a,b] of showWalls ? table.walls : []) {ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.strokeStyle='#6c8a91';ctx.lineWidth=.085;ctx.stroke();ctx.strokeStyle='#b6d0ce';ctx.lineWidth=.025;ctx.stroke();}
+  for (const [a,b] of showWalls ? [...table.walls,...(table.guides??[]).map(g=>[g.a,g.b])] : []) {ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.strokeStyle='#6c8a91';ctx.lineWidth=.085;ctx.stroke();ctx.strokeStyle='#b6d0ce';ctx.lineWidth=.025;ctx.stroke();}
   if(showWalls)for(const gate of table.gates){ctx.beginPath();ctx.moveTo(gate.a[0],gate.a[1]);ctx.lineTo(gate.b[0],gate.b[1]);ctx.lineWidth=.045;ctx.strokeStyle='#f3b46d';ctx.stroke();}
   for (const f of state.flippers) {
     ctx.save();ctx.translate(f.x,f.y);ctx.rotate(f.angle);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(table.flipperLength,0);ctx.lineWidth=table.flipperRadius*2;ctx.strokeStyle='#f3b46d';ctx.shadowColor='#f3b46d';ctx.shadowBlur=12;ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#203943';ctx.beginPath();ctx.arc(0,0,.055,0,Math.PI*2);ctx.fill();ctx.restore();

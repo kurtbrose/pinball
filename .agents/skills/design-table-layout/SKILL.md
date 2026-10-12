@@ -10,6 +10,7 @@ Create a coherent, controllable playfield with deliberate shot and return routes
 The canonical reference is [TABLE_DESIGN.md](../../../TABLE_DESIGN.md), relative to this skill directory. Read only sections relevant to the task:
 
 - New layout or broad review: **Design brief and layout patterns**, **Shot geometry**, **Component placement**, and **Agency, difficulty and reward**.
+- Every layout review: **Operational route review**. Broad refinement covers the ordinary route map; narrow changes cover the affected routes and upstream/downstream neighbors.
 - Blocked shots or poor feeds: **Shot geometry**, **Clearance and passive returns**, and **Evaluation with the shot laboratory**.
 - Stalls or unexpectedly endless play: **Clearance and passive returns**, **Agency, difficulty and reward**, and the findings table in **Evaluation with the shot laboratory**.
 - Punishing drains, missing safe areas beside flippers, or broad refinement: **Lower-playfield control review** as well as **Component placement** and **Agency, difficulty and reward**. Treat reported loss of control as a layout issue even when drainability checks pass.
@@ -17,6 +18,8 @@ The canonical reference is [TABLE_DESIGN.md](../../../TABLE_DESIGN.md), relative
 - Requested ramp work: **Ramps and elevation** and **Shot geometry**. Distinguish a proposed future model from implemented mechanics.
 
 Inspect `src/table.js`, relevant scenarios/tests, and current `STATUS.md` before changing a layout. Define the shot's origin, entrance, completion, successful return and near-miss behavior. Check full-ball clearance and moving flipper geometry; passive guides need exits for slow balls. Support intentional capture with a real release mechanism.
+
+Build an evidence map before declaring refinement complete: for each applicable principle, state its intended behavior, a failure example, a probe and the supported/problem/untested finding. Follow complete ball routes from plausible upstream starts, not only component-local setups. Include wall descents into lane branches, successful-shot returns, misses and slow arrivals. A downstream test does not cover its feeder. Resolve demonstrated mechanical failures within scope; disclose gaps and human judgments. Do not use passing clearance, contact or drain tests as substitutes for control or fair difficulty.
 
 Use `runShot` and timing searches for specific reachability/return questions, varying plausible arrivals rather than relying on a single favorable setup. Preserve reproducible scenarios and failed trials. Report target hits, sampled timing intervals, drains/censoring and low-speed diagnostics separately. Saved reports contain old table definitions; rerun common inputs against the new definition for comparisons. Full three-ball behavior needs `Simulation`, not the single-shot runner.
 

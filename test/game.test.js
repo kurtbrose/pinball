@@ -87,7 +87,7 @@ test('bumper emits an event, adds explicit kick and rules score separately',()=>
   const rules=new Rules({'bumper.hit':7});rules.consume(events);assert.equal(rules.score,7);
 });
 test('rubber posts and slingshots emit their own events',()=>{
-  for(const [id,x,y,vx,vy] of [['post-left',1.59,5.1,-3,0],['sling-left',2.5,6.95,-3,0],['sling-right',3.35,6.95,3,0]]){
+  for(const [id,x,y,vx,vy] of [['post-left',1.59,firstTable.mechanisms.find(m=>m.id==='post-left').y,-3,0],['sling-left',2.5,6.95,-3,0],['sling-right',3.35,6.95,3,0]]){
     const isolated={...firstTable,mechanisms:firstTable.mechanisms.filter(m=>m.id===id),walls:[]};
     const sim=new Simulation({},isolated);sim.phase='playing';sim.ball.setPosition(Vec2(x,y));sim.ball.setLinearVelocity(Vec2(vx,vy));
     const events=[];for(let i=0;i<12;i++){sim.step();events.push(...sim.events);}

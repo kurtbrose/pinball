@@ -31,6 +31,9 @@ export class Simulation {
     for (const [a, b] of options.isolated ? [] : table.walls) {
       ground.createFixture(new Edge(Vec2(a[0], a[1]), Vec2(b[0], b[1])), table.materials.wall);
     }
+    for(const guide of options.isolated?[]:table.guides??[]){
+      ground.createFixture(new Edge(Vec2(guide.a[0],guide.a[1]),Vec2(guide.b[0],guide.b[1])),{...table.materials.wall,restitution:guide.restitution,userData:{guide}});
+    }
     this.flippers = table.flippers.map(({x,y,side}) => {
       const angle = side === 1 ? table.restAngle : Math.PI - table.restAngle;
       const body = this.world.createDynamicBody({ position: Vec2(x, y), angle });
@@ -50,7 +53,10 @@ export class Simulation {
     this.world.on('pre-solve',contact=>{
       const a=contact.getFixtureA(),b=contact.getFixtureB();
       const fixture=a.getBody()===this.ball?b:b.getBody()===this.ball?a:null;
-      const data=/** @type {{gate?:typeof table.gates[number]}|undefined} */(fixture?.getUserData());
+      const data=/** @type {{gate?:typeof table.gates[number],guide?:typeof table.guides[number]}|undefined} */(fixture?.getUserData());
+      // Planck normally mixes restitution by maximum; the ball's rubber-like
+      // baseline must not turn a deliberately passive guide into a trampoline.
+      if(data?.guide)contact.setRestitution(data.guide.restitution);
       if(data?.gate){
         const velocity=this.ball.getLinearVelocity(),direction=data.gate.allowedDirection;
         contact.setEnabled(velocity.x*direction[0]+velocity.y*direction[1]<=0);

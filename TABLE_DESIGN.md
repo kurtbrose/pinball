@@ -11,6 +11,7 @@ The source summaries below are paraphrases. The workflow, calculations, diagnost
 - [Shot identity](#shot-identity)
 - [Clearance and passive returns](#clearance-and-passive-returns)
 - [Component placement](#component-placement)
+- [Operational route review](#operational-route-review)
 - [Agency, difficulty and reward](#agency-difficulty-and-reward)
 - [Working from real layouts](#working-from-real-layouts)
 - [Evaluation with the shot laboratory](#evaluation-with-the-shot-laboratory)
@@ -106,6 +107,29 @@ The drainability pass removed a powered center-save post, replaced uphill lower 
 An earlier shot-lab observation also found incomplete left-flipper travel near a slingshot. Recheck the current geometry before assuming that diagnosis still applies. A calibration fixture can pass while a table mechanism physically blocks the same actuator.
 
 ## Component placement
+
+### Operational route review
+
+Review the chain **entry → interaction → exit → next control opportunity → miss/loss route**. Maintain a route map for launch/gate, both wall descents, bumper exits, sling rebounds, both inlanes, outlane branch points, flipper aims and their actual returns, and center misses. Omit unimplemented routes explicitly. For a narrow change, include affected routes and their upstream/downstream neighbors; for broad refinement, give every ordinary route a finding.
+
+Turn applicable guidance into evidence obligations:
+
+| Intent | Failure example | Probe/evidence | Misleading substitute |
+| --- | --- | --- | --- |
+| Accessible shot | Local launch reaches a target but ordinary feed cannot | Plausible feed plus timing/aim variants and observed completion | One favorable hit |
+| Passive return | Wall descent never enters the protected feed | Start upstream; trace branch, exit and paddle response | Starting inside the inlane |
+| Clearance and sweep | Fast ball passes but slow ball pinches; paddle stalls | Full-ball clearance, slow junction tests, moving/held mechanism states | Visible opening |
+| Player control | Paddle is touched but ball cannot be redirected | Observed catch/release or input-dependent redirection | Contact or return-line crossing |
+| Chaos with escape | Bumper/sling loop or corner monopolizes the ball | Actual hit then downstream trajectory, weak arrival and miss | Target activation alone |
+| Distinct loss route | Routine feed falls into an unmarked loss corridor | Branch-point arrivals and deliberate misses; compare intended feed/loss | Eventual natural drain |
+| Legible mechanics | Artwork suggests a different corridor | Browser inspect collision-aligned presentation and interactions | Headless pass |
+| Appropriate difficulty | Only exact timing saves routine returns | Sampled windows plus human playtesting | Survival or a quality score |
+
+Use **supported in tested cases**, **problem found**, or **untested** for each obligation, with scenario identities and limits. Split mixed findings rather than treating a row as globally passed. Existing checks count only for the behavior and starting states they actually cover. Include sampled failures and no-input baselines, release intentional catches, and keep nudges separate from ordinary-feed control. Reconstruct complete routes from fresh worlds; do not transplant convenient downstream states as evidence of upstream success.
+
+Completion of a broad mechanical review requires evidence for each applicable mechanical obligation or an explicit unresolved finding with a next probe. Report the scope as partial when important routes remain untested. Human fairness and feel remain outstanding until human feedback; an automated review never establishes them. `node scripts/route-review.js` provides reproducible demo-board route families and matched table comparisons, not a universal certification.
+
+`runRoute(spec, stages)` in `src/route-lab.js` checks ordered rectangular passages and simulation events at every tick, independently of displayed trajectory sampling. For example, require inlane passage then paddle contact; to test a subsequent redirection, require paddle contact then an upper return region. An early upper-region crossing cannot satisfy a return stage before the contact. Keep a no-input baseline: passive rebounds must not be credited as input-dependent control. `complete` refers only to the declared stages, not overall layout quality. Passive collectors use explicit contact restitution in `table.guides`; normal Planck maximum restitution mixing would otherwise preserve the ball's bounce even on a low-restitution guide.
 
 Treat this section as project-specific review guidance, not a mandated real-machine arrangement.
 
