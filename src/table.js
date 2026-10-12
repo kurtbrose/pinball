@@ -22,7 +22,7 @@ export const table = {
   damping:{linear:0.025,angular:0.02},
   gates: /** @type {{id:string,a:number[],b:number[],allowedDirection:number[]}[]} */([]),
   guides: /** @type {{a:number[],b:number[],restitution:number}[]} */([]),
-  mechanisms: /** @type {{id:string,type:'post'|'bumper'|'sling',x:number,y:number,radius:number,kick:number,vertices?:number[][],direction?:number[]}[]} */ ([]),
+  mechanisms: /** @type {{id:string,type:'post'|'bumper'|'sling',x:number,y:number,radius:number,kick:number,vertices?:number[][],direction?:number[],activeNormal?:number[]}[]} */ ([]),
   game:{enabled:false,balls:3,drainY:10.3,resetDelay:90},
   plunger:{maxPullTicks:90,minSpeed:8,maxSpeed:16},
   nudge:{velocity:0,cooldownTicks:30},
@@ -33,6 +33,9 @@ export const table = {
 // Keep the prototype dynamics while adding a full layout and clearer proportions.
 export const firstTable = {
   ...table, ballRadius:0.18, flipperLength:1.05,
+  // Conventional two-flipper lower field, centered in the playable area
+  // (the shooter channel lies outside x=5.1).
+  flippers:[{x:1.4,y:8.2,side:1},{x:4.05,y:8.2,side:-1}],
   // Arcade table-frame jolt, not a calibrated cabinet movement model.
   nudge:{velocity:1.2,cooldownTicks:30},
   plunger:{maxPullTicks:90,minSpeed:11,maxSpeed:16},
@@ -48,8 +51,8 @@ export const firstTable = {
     [[5.1,1.85],[5.1,9.3]],[[5.1,9.3],[5.65,9.3]],
     // Continuous downhill protection joins the outer heels. Held catches must
     // release when the paddle lowers; outlanes remain outside these guides.
-    [[.9,6.3],[.9,7.3]],[[.9,7.3],[1.65,8.2]],
-    [[4.5,6.3],[4.5,7.3]],[[4.5,7.3],[4.35,8.2]],
+    [[.9,6.3],[.9,7.1]],[[.9,7.1],[1.4,8.2]],
+    [[4.55,6.3],[4.55,7.1]],[[4.55,7.1],[4.05,8.2]],
   ],
   mechanisms:[
     {id:'pop-left',type:/** @type {const} */('bumper'),x:2,y:2.7,radius:.38,kick:6},
@@ -58,9 +61,10 @@ export const firstTable = {
     {id:'post-left',type:/** @type {const} */('post'),x:1.25,y:4.7,radius:.16,kick:0},
     {id:'post-right',type:/** @type {const} */('post'),x:4.4,y:4.7,radius:.16,kick:0},
     {id:'lane-left',type:/** @type {const} */('post'),x:.9,y:6.3,radius:.13,kick:0},
-    {id:'lane-right',type:/** @type {const} */('post'),x:4.5,y:6.3,radius:.13,kick:0},
-    // Short slings leave full-ball room above the raised flippers and guide exits.
-    {id:'sling-left',type:/** @type {const} */('sling'),x:1.85,y:6.7,radius:0,kick:5,vertices:[[1.65,6.4],[1.65,6.85],[2.25,7.0]],direction:[1,-1]},
-    {id:'sling-right',type:/** @type {const} */('sling'),x:3.65,y:6.7,radius:0,kick:5,vertices:[[3.75,6.4],[3.45,7.0],[3.75,6.85]],direction:[-1,-1]},
+    {id:'lane-right',type:/** @type {const} */('post'),x:4.55,y:6.3,radius:.13,kick:0},
+    // Paired triangular slings frame the lower fan. Their outer edges form
+    // protected inlanes; their inner tips clear the full raised-paddle sweep.
+    {id:'sling-left',type:/** @type {const} */('sling'),x:1.75,y:6.9,radius:0,kick:5,vertices:[[1.55,6.1],[1.55,7.15],[2.15,7.4]],direction:[1,-1],activeNormal:[1.3,-.6]},
+    {id:'sling-right',type:/** @type {const} */('sling'),x:3.7,y:6.9,radius:0,kick:5,vertices:[[3.9,6.1],[3.3,7.4],[3.9,7.15]],direction:[-1,-1],activeNormal:[-1.3,-.6]},
   ],
 };

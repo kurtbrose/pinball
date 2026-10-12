@@ -1,5 +1,7 @@
 # Demo board route and principle evidence map
 
+Historical review of the collector layout now preserved in `layout-before-conventional-lower.json`. For current geometry and routine evaluation, see `conventional-lower-review.md`; the counts below belong to the earlier revision.
+
 Purpose: an open, single-level three-ball demo with aimable bumpers, recoverable ordinary returns, active slings and deliberate center/outlane losses. This is a mechanical review with bounded samples; fairness, shot identity and feel remain partial.
 
 Baseline: `layout-before-route-review.json`; revision: current `firstTable`, servo actuator at 120 Hz. Reproduce with `node scripts/route-review.js`; full inputs, table definitions, successful and failed trials, trajectories, ordered stages, events and censoring go to `results/route-review.json`, summaries to `results/route-summary.json`.

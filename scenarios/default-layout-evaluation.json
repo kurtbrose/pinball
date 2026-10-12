@@ -1,0 +1,9 @@
+{
+  "bounds": {"x":0.54,"y":0.6,"width":4.37,"height":8.4},
+  "gridSpacing":0.5,
+  "playfield":[[0.35,1.2],[1.2,0.35],[4.8,0.35],[5.65,1.2],[5.1,1.85],[5.1,9.3],[0.35,9.8]],
+  "feeds":[
+    {"id":"left-wall","side":"left","start":{"x":0.56,"y":4.5},"corridor":{"x":1.08,"y":6.5,"width":0.42,"height":0.2}},
+    {"id":"right-wall","side":"right","start":{"x":4.89,"y":4.5},"corridor":{"x":4.05,"y":6.5,"width":0.42,"height":0.2}}
+  ]
+}

@@ -1,0 +1,13 @@
+import { readFileSync,mkdirSync,writeFileSync } from 'node:fs';
+import { firstTable } from '../src/table.js';
+import { evaluateLayout } from '../src/layout-evaluation.js';
+const profile=JSON.parse(readFileSync(new URL('../scenarios/default-layout-evaluation.json',import.meta.url),'utf8'));
+const report=evaluateLayout(firstTable,profile);
+mkdirSync('results',{recursive:true});
+writeFileSync('results/layout-evaluation.json',JSON.stringify(report));
+const warnings=report.findings.filter(f=>f.severity==='warning');
+console.log(`Layout evaluation: ${report.coverage.simulations} simulations, ${report.coverage.positions} clear spatial starts, ${report.feeds.length} wall arrivals, ${report.aims.length} bumper approaches; ${report.failures} failures, ${warnings.length} diagnostics.`);
+for(const finding of report.findings.slice(0,12))console.log(`  ${finding.severity}: ${finding.id}: ${finding.reason}`);
+if(report.findings.length>12)console.log(`  ${report.findings.length-12} more findings in results/layout-evaluation.json`);
+console.log('Reproducible configurations and counterexample trajectories: results/layout-evaluation.json');
+if(report.failures)process.exitCode=1;

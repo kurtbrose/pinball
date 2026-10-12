@@ -26,6 +26,15 @@ jobs:
           package-manager-cache: false
       - name: Verify asset packaging
         run: node --test test/pages.test.js
+      - name: Verify default layout contracts
+        run: node scripts/evaluate-layout.js
+      - name: Save layout diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-evaluation
+          path: results/layout-evaluation.json
+          if-no-files-found: ignore
       - name: Require GitHub Actions publishing
         env:
           GH_TOKEN: ${{ github.token }}

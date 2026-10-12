@@ -87,11 +87,24 @@ test('bumper emits an event, adds explicit kick and rules score separately',()=>
   const rules=new Rules({'bumper.hit':7});rules.consume(events);assert.equal(rules.score,7);
 });
 test('rubber posts and slingshots emit their own events',()=>{
-  for(const [id,x,y,vx,vy] of [['post-left',1.59,firstTable.mechanisms.find(m=>m.id==='post-left').y,-3,0],['sling-left',2.5,6.95,-3,0],['sling-right',3.35,6.95,3,0]]){
+  for(const [id,x,y,vx,vy] of [['post-left',1.59,firstTable.mechanisms.find(m=>m.id==='post-left').y,-3,0],['sling-left',2.4,7.25,-3,0],['sling-right',3.05,7.25,3,0]]){
     const isolated={...firstTable,mechanisms:firstTable.mechanisms.filter(m=>m.id===id),walls:[]};
     const sim=new Simulation({},isolated);sim.phase='playing';sim.ball.setPosition(Vec2(x,y));sim.ball.setLinearVelocity(Vec2(vx,vy));
     const events=[];for(let i=0;i<12;i++){sim.step();events.push(...sim.events);}
     assert.ok(events.some(e=>e.id===id),`${id} emits an event`);
     if(id.startsWith('sling-'))assert.ok(sim.ball.getLinearVelocity().y<0);
+  }
+});
+
+test('sling inlane faces are passive while inward faces score and kick',()=>{
+  for(const side of ['left','right']){
+    const definition={...firstTable,mechanisms:firstTable.mechanisms.filter(m=>m.id===`sling-${side}`),walls:[],guides:[],gates:[]};
+    const sim=new Simulation({},definition);sim.phase='playing';
+    sim.ball.setPosition(Vec2(side==='left'?1.25:4.2,6.6));
+    sim.ball.setLinearVelocity(Vec2(side==='left'?1:-1,0));
+    const events=[];for(let i=0;i<40;i++){sim.step();events.push(...sim.events);}
+    assert.equal(events.filter(e=>e.type==='sling.hit').length,0);
+    assert.equal(sim.rules.score,0);
+    assert.ok(sim.ball.getLinearVelocity().y>0);
   }
 });

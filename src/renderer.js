@@ -17,6 +17,13 @@ export function render(ctx, state, showWalls = true) {
     if(m.vertices){m.vertices.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();}
     else ctx.arc(m.x,m.y,m.radius,0,Math.PI*2);
     ctx.fill();ctx.stroke();
+    if(m.type==='sling'&&m.activeNormal&&m.vertices){
+      // The long inward rubber face is active; the inlane border stays passive.
+      const vertices=m.vertices;
+      const edges=vertices.map((a,i)=>({a,b:vertices[(i+1)%vertices.length]}));
+      const face=edges.reduce((best,edge)=>Math.hypot(edge.b[0]-edge.a[0],edge.b[1]-edge.a[1])>Math.hypot(best.b[0]-best.a[0],best.b[1]-best.a[1])?edge:best);
+      ctx.beginPath();ctx.moveTo(face.a[0],face.a[1]);ctx.lineTo(face.b[0],face.b[1]);ctx.strokeStyle=active?'#fff2c7':'#f3b46d';ctx.lineWidth=.055;ctx.stroke();
+    }
     if(m.type==='bumper'){ctx.beginPath();ctx.arc(m.x,m.y,m.radius*.65,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#142b35';ctx.font='.13px Arial';ctx.fillText('100',m.x,m.y+.04);}
   }
   for (const [a,b] of showWalls ? [...table.walls,...(table.guides??[]).map(g=>[g.a,g.b])] : []) {ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.strokeStyle='#6c8a91';ctx.lineWidth=.085;ctx.stroke();ctx.strokeStyle='#b6d0ce';ctx.lineWidth=.025;ctx.stroke();}

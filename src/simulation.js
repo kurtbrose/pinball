@@ -61,6 +61,14 @@ export class Simulation {
         const velocity=this.ball.getLinearVelocity(),direction=data.gate.allowedDirection;
         contact.setEnabled(velocity.x*direction[0]+velocity.y*direction[1]<=0);
       }
+      const mechanism=/** @type {typeof table.mechanisms[number]|undefined} */(fixture?.getUserData());
+      if(mechanism?.type==='sling'&&mechanism.activeNormal){
+        const normal=contact.getWorldManifold(null)?.normal;
+        const direction=mechanism.activeNormal,sign=a.getBody()===this.ball?-1:1;
+        const facing=normal?sign*(normal.x*direction[0]+normal.y*direction[1])/Math.hypot(...direction):0;
+        if(facing>.7){if(this.phase==='playing')this.pending.push(mechanism);}
+        else contact.setRestitution(.05); // The inlane-facing wall is passive.
+      }
     });
     this.mechanisms=this.isolated?[]:table.mechanisms;
     for(const mechanism of this.mechanisms){
@@ -72,7 +80,7 @@ export class Simulation {
       const a=contact.getFixtureA(),b=contact.getFixtureB();
       const fixture=a.getBody()===this.ball?b:b.getBody()===this.ball?a:null;
       const mechanism=/** @type {typeof table.mechanisms[number]|undefined} */(fixture?.getUserData());
-      if(mechanism?.id && this.phase==='playing')this.pending.push(mechanism);
+      if(mechanism?.id && this.phase==='playing'&&!(mechanism.type==='sling'&&mechanism.activeNormal))this.pending.push(mechanism);
     });
     this.resetBall();
   }

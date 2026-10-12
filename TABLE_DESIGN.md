@@ -23,6 +23,10 @@ The source summaries below are paraphrases. The workflow, calculations, diagnost
 
 State what a player should do: which shots they can aim at, what returns enable another shot, and where danger enters. Begin with the lower playfield and a few purposeful routes, then add mechanisms that serve those routes. An attractive distribution of objects is not a shot map.
 
+For the ordinary two-flipper demo, choose the established lower-playfield arrangement before numerical tuning: inward-active triangular slings above paired flippers, protected inlanes leading to their outer heels, and separate outlanes beyond the lane dividers. Center that assembly in the playable width, excluding the shooter channel. The supplied Star Trek photo and Pinball Star screenshot show this shared structure; they do not supply calibrated dimensions for our arcade units. Make departures explicit. Simulation should challenge a chosen reference arrangement, rather than inventing disconnected guides because a few probes pass.
+
+Distinguish active sling rubber from passive lane borders. The demo's `activeNormal` defines the inward trigger face; outside/underneath contacts are passive and do not score or kick. Render the active face consistently. Full-ball clearance, moving flipper clearance, and incoming/outgoing routes still require validation after adapting proportions.
+
 Pinball Makers distinguishes **flow**, where returns support ongoing shot sequences, from **stop-and-go**, where capture and redirection interrupt the sequence. It uses Attack From Mars and Twilight Zone as examples. Neither style requires every shot to behave alike. [Source: Pinball Makers](https://pinballmakers.com/wiki/index.php/Design)
 
 For this project, use these patterns as design options rather than templates to stamp out:
@@ -184,11 +188,15 @@ A perspective photo can suggest structure but should not supply precise dimensio
 
 Use IPDB as a lookup starting point for machine records and reference material. Its homepage could not be retrieved during this guide's preparation; no machine-specific measurements were extracted from it. [IPDB](https://www.ipdb.org/)
 
-Start a reference collection when a layout task needs it, rather than claiming an unreviewed catalogue is already curated. Fan, orbit-focused, capture-focused, simple single-level and multilevel designs provide useful variety. For any example, separate a source-supported observation from our proposed adaptation.
+Start with [PINBALL_MECHANISMS.md](PINBALL_MECHANISMS.md) and its source-linked machine records when choosing reusable devices or route patterns. The seed is descriptive, not measured geometry; inspect the original reference before adapting a specific layout. Fan, orbit-focused, capture-focused, simple single-level and multilevel designs provide useful variety. For any example, separate a source-supported observation from our proposed adaptation.
 
 ## Evaluation with the shot laboratory
 
 The existing laboratory evaluates reproducible individual shots. It does not currently generate layouts, optimize them, implement an automated player or provide a table-wide quality validator.
+
+Routine `node scripts/check.js` now also runs `scripts/evaluate-layout.js` (standalone: `pnpm run evaluate:layout`). Its fixed profile in `scenarios/default-layout-evaluation.json` declares playable bounds and ordinary wall-feed contracts. It generates a lattice plus geometry-derived edge/corner arrivals, three small lateral velocities, upstream wall variations and bumper timing trials. Invalid/overlapping/outside starts are screened; the shooter-ready region is explicitly excluded and tested through game scenarios. No randomness or optimization is involved.
+
+Required straight wall feeds, blocked declared approaches, unreachable sampled bumper aims, escapes and persistent low-speed states after bounded multi-direction recovery probes fail normal checks and Pages publishing. Angled feed/control gaps, moving timeouts, input-responsive low-speed states and successful shots without later paddle contact remain diagnostics. These categories are declared contracts and heuristic findings, not universal fairness thresholds. A warning is unresolved evidence, not an automatic pass on feel. Full configurations and counterexample trajectories are saved to `results/layout-evaluation.json` and CI artifacts; replay with the saved `config`. Preserve a demonstrated failure as a tracked regression before changing its contract.
 
 ### Establish a baseline
 

@@ -120,3 +120,7 @@ Metrics remain separate:
 The worker and Node now load the same Planck module URL via `src/physics.js`. Workers cannot use the document import map. For vendored/static deployment, update that URL as well as the calibration page's import map.
 
 Random/reactive/predictive players and automatic layout optimization are future stages. This lab provides their scenario, measurement, and replay foundation first.
+
+## Real-machine design reference
+
+[PINBALL_MECHANISMS.md](PINBALL_MECHANISMS.md) indexes reusable mechanisms, shot/return patterns and rule interactions, with source-linked machine records and explicit current-engine limits. Use it to choose building blocks before applying [TABLE_DESIGN.md](TABLE_DESIGN.md) and the shot laboratory. [Research intake](research/sources.md) describes expansion and optional VPX analysis.
