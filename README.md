@@ -1,6 +1,6 @@
 # Browser Pinball — First contact
 
-A complete small three-ball table: two flippers, a charged plunger, three pop bumpers, rubber posts, slingshots, inlanes/outlanes, scoring, and game over. Static HTML, Canvas, JavaScript modules and Planck 1.5.0; no build step or backend.
+A complete small three-ball table: two flippers, a charged plunger, three pop bumpers, rubber posts, slingshots, inlanes/outlanes, scoring, and game over. Static HTML, Canvas, JavaScript modules and Planck 1.5.0; no backend. Development runs directly; Pages deployment packages versioned assets.
 
 ## Run
 
@@ -47,7 +47,30 @@ Measurements only accept contacts between the ball and the tested flipper, in ei
 
 Exit velocity is sampled after the initial 16 measured ticks and three ticks without an impact impulse, avoiding transient fixture separations. Rise ends at the apex, next impact, or five-second trial limit. Peak contact speed is the maximum absolute post-solver angular speed over the initial contact sequence. Midstroke/raised cases warm up the flipper away from the ball, then introduce an incoming ball just outside the current rubber surface. They are controlled state probes, not complete inlane approach trajectories.
 
-Static deployment needs no install or build step. Planck 1.5.0 is checked in at `vendor/planck.mjs`, with its source map and MIT license. Browser play, workers and Node scenarios load this same copy; the package dependency supplies declarations for type checking. Serve the repository as static files, including `vendor/`. Relative assets and navigation work under the GitHub Pages `/pinball/` prefix. When upgrading Planck, update the package version and vendored module, map and license together, then run checks. The local development server is not a production server.
+Planck 1.5.0 is checked in at `vendor/planck.mjs`, with its source map and MIT license. Browser play, workers and Node scenarios load this same copy; the package dependency supplies declarations for type checking. Development can serve the repository directly, including `vendor/`. Relative assets and navigation work under the GitHub Pages `/pinball/` prefix. When upgrading Planck, update the package version and vendored module, map and license together, then run checks. The local development server is not a production server.
+
+## GitHub Pages and cache busting
+
+Run `pnpm run build:pages` or `node scripts/build-pages.js` to produce `dist/`.
+This dependency-free packaging step copies CSS, the entire module graph, workers,
+and vendored physics unchanged into `assets/<content-hash>/`. All three HTML
+entry points reference that version. A table, module, stylesheet or HTML change
+changes the hash; an identical build reuses it. Relative imports and worker URLs
+stay inside the same version, and page navigation remains at the site root.
+Root asset copies support HTML cached before versioning was introduced.
+
+`.github/workflows/pages.yml` packages and deploys `dist/` on pushes to `main`,
+or through manual workflow dispatch. In repository **Settings → Pages**, choose
+**GitHub Actions** as the publishing source. No package installation is needed
+for packaging; the workflow runs its focused regression test first.
+
+The workflow restores the last successful Pages artifact before packaging so
+old HTML and already-open pages retain their matching asset versions. Artifacts
+are retained for 90 days; if that artifact is unavailable or expired, packaging
+starts fresh. Local builds also retain existing versions in `dist/`. Retained
+versions accumulate, so storage can be pruned deliberately if it becomes large.
+Versioning does not force already-cached HTML to refresh immediately; once new
+HTML is fetched, all its changing assets use fresh URLs.
 
 ## Headless shot laboratory
 

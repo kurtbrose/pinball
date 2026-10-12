@@ -9,9 +9,9 @@ test('complete-table commands replay deterministically with scoring and game sta
   assert.deepEqual(replay(commands,1200,firstTable),replay(commands,1200,firstTable));
 });
 test('both inlanes admit the ball and deliver it past the slingshots',()=>{
-  for(const x of [1.15,4.4]){
+  for(const x of [1.15,4.25]){
     const sim=new Simulation({},firstTable);sim.phase='playing';sim.ball.setPosition(Vec2(x,6.6));sim.ball.setLinearVelocity(Vec2(0,1));
-    let exited=false;for(let i=0;i<180;i++){sim.step();if(sim.ball.getPosition().y>7.8)exited=true;}
+    let exited=false;for(let i=0;i<360;i++){sim.step();if(sim.ball.getPosition().y>7.8)exited=true;}
     assert.ok(exited,`inlane at ${x} passes the ball`);
   }
 });
@@ -68,7 +68,10 @@ test('unattended launches naturally drain through a complete three-ball game',()
       for(let i=0;i<charge;i++)sim.step({plunger:true});
       sim.step({plungerRelease:true});
       for(let i=0;i<7200&&sim.phase==='playing';i++)sim.step({left:held,right:held});
-      assert.ok(sim.phase==='draining'||sim.phase==='gameover',`${actuation}, held=${held}, charge=${charge} drains within 60 seconds`);
+      // The opened guide exits permit deliberate raised-flipper catches.
+      // Require a natural loss after release rather than forbidding a catch.
+      if(held)for(let i=0;i<7200&&sim.phase==='playing';i++)sim.step();
+      assert.ok(sim.phase==='draining'||sim.phase==='gameover',`${actuation}, held=${held}, charge=${charge} drains naturally, releasing any held catch`);
       while(sim.phase==='draining')sim.step();
     }
     assert.equal(sim.phase,'gameover');assert.equal(sim.drains,3);
@@ -84,11 +87,11 @@ test('bumper emits an event, adds explicit kick and rules score separately',()=>
   const rules=new Rules({'bumper.hit':7});rules.consume(events);assert.equal(rules.score,7);
 });
 test('rubber posts and slingshots emit their own events',()=>{
-  for(const [id,x,y,vx,vy] of [['post-left',1.59,5.1,-3,0],['sling-left',1.9,7.98,0,-3]]){
+  for(const [id,x,y,vx,vy] of [['post-left',1.59,5.1,-3,0],['sling-left',2.5,6.95,-3,0],['sling-right',3.35,6.95,3,0]]){
     const isolated={...firstTable,mechanisms:firstTable.mechanisms.filter(m=>m.id===id),walls:[]};
     const sim=new Simulation({},isolated);sim.phase='playing';sim.ball.setPosition(Vec2(x,y));sim.ball.setLinearVelocity(Vec2(vx,vy));
     const events=[];for(let i=0;i<12;i++){sim.step();events.push(...sim.events);}
     assert.ok(events.some(e=>e.id===id),`${id} emits an event`);
-    if(id==='sling-left')assert.ok(sim.ball.getLinearVelocity().y<0);
+    if(id.startsWith('sling-'))assert.ok(sim.ball.getLinearVelocity().y<0);
   }
 });

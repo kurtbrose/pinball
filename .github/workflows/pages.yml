@@ -1,0 +1,60 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Verify asset packaging
+        run: node --test test/pages.test.js
+      - uses: actions/configure-pages@v5
+      - name: Retain assets for cached HTML and open tabs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          previous_run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/pages.yml/runs?status=success&per_page=1" --jq '.workflow_runs[0].id // empty')
+          if [ -n "$previous_run" ]; then
+            available=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$previous_run/artifacts" --jq 'any(.artifacts[]; .name == "github-pages" and .expired == false)')
+            if [ "$available" = true ]; then
+              gh run download "$previous_run" --repo "$GITHUB_REPOSITORY" --name github-pages --dir "$RUNNER_TEMP/previous-pages"
+              mkdir -p dist
+              tar -xf "$RUNNER_TEMP/previous-pages/artifact.tar" -C dist
+            fi
+          fi
+      - name: Package static site
+        run: node scripts/build-pages.js
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+          retention-days: 90
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

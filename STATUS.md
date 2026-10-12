@@ -2,7 +2,7 @@
 
 ## Working
 
-- First complete table: three-ball game, charged plunger, shooter lane, inlanes/outlanes, two powered flippers, rubber posts, three pop bumpers, two slingshots, tunable energetic center post, scoring and game over.
+- First complete table: three-ball game, charged plunger, shooter lane, inlanes/outlanes, two powered flippers, rubber posts, three pop bumpers, two slingshots, scoring and game over.
 - Ball drains advance after a short delay; shooter-lane returns permit another plunge. New game resets score and ball count.
 - Canvas presentation, activation flashes, keyboard controls, pointer/touch controls, and compact layout with the full table visible.
 - Simulation accepts an ordinary table definition. Pivots, walls, ball spawn, gravity and material settings are configurable. Original calibration fixture and playable layout remain separate definitions.
@@ -27,6 +27,15 @@
 
 Human playtesting of the complete table: compare actuator models, evaluate aiming/catching and return paths, watch for stalls, and assess drain frequency. Choose the final actuation baseline from that feedback. Add one table/mechanism improvement at a time.
 
+## Complete example-table refinement
+
+- Shortened and raised both slings, opened the right aiming corridor, widened the lane passages, and moved downhill guide exits above the heels. The former persistent left and right heel pockets release in the revised layout; motors, materials, scores and calibration are preserved.
+- Repeatable review: `node scripts/layout-review.js` and `node scripts/layout-audit.js`. Tracked before definition and arrivals live in `scenarios/`; [LAYOUT_REVIEW.md](LAYOUT_REVIEW.md) records timing intervals, return findings, negative tests and limits.
+- All three bumpers remain reachable from both flippers at three sampled arrival speeds. Default center timing sweeps reach 21/25 left and 20/25 right; reachability is not a claim about direct aiming or feel.
+- Broad matched audit: 686 trials per layout and both actuator models. All revised trials drain within 30 seconds after scripted release/retry; nine old stationary heel cases persist through 100-second extensions. The 96-case lane family also drains after release. Held catches are now permitted by the full-game regression and must drain naturally after release; no drain timer or automatic save was added.
+- Type checking and all 35 tests pass, covering stroke/hold/release, lane feeds, all-bumper access, shooter charge/gate behavior, replay and three-ball play.
+- Isolated Edge browser verification passed for both actuator models: rendering, keyboard launch/flippers, pointer plunge, scoring, ball advance, restart, worker timing search and scrubbing. Browser timing counts match Node; no runtime or resource errors observed. Screenshots inspected. Human playtesting remains necessary for aiming, catches, outlane rebounds and fairness.
+
 ## Shot laboratory
 
 - `/shot-lab.html` runs editable scenarios in a module worker and displays trajectories, a scrubber, position heatmaps, events, metrics and timing success/failure overlays. Results can be downloaded as self-contained JSON.
@@ -43,6 +52,10 @@ Human playtesting of the complete table: compare actuator models, evaluate aimin
 Full-strength launches could enter the playfield and then rebound through the open shooter mouth. Added a sloped one-way gate: upward launches pass, downward returns deflect left using native collision response. The launch regression now tracks 10 seconds after each of seven charge levels for both actuator models and rejects any shooter-return event, rather than accepting momentary playfield entry.
 
 ## Static GitHub Pages deployment
+
+- Added dependency-free Pages packaging: `node scripts/build-pages.js` / `pnpm run build:pages`. HTML references content-versioned CSS, the full module graph, module worker and vendored physics in `dist/assets/<hash>/`; unchanged source bytes preserve the Node/browser physics baseline.
+- Added `.github/workflows/pages.yml` for `main` and manual dispatch. It restores the last successful Pages artifact when available, preserving old asset paths for cached HTML/open tabs, then packages and deploys `dist/`. Artifact retention is 90 days. Requires Pages publishing source **GitHub Actions**; remote settings and deployment have not been changed in this session.
+- Type checking and all 36 tests pass. An isolated Edge test with caching enabled under `/pinball/` verified two asset versions, fresh table code after reload, a still-working old-tab worker, the new worker, launch and all 20 calibration rows; no browser errors. Existing HTML can remain cached until revalidation; assets update together when fresh HTML is loaded.
 
 - Vendored Planck 1.5.0 with its source map and MIT license. Browser pages, module workers and headless scenarios use the same checked-in module; no runtime node_modules or build step is needed.
 - Fixed play/back links and the servo comparison link to stay inside the deployment subdirectory.

@@ -1,0 +1,324 @@
+[
+  {
+    "name": "Left center aim",
+    "initial": {
+      "x": 2.5,
+      "y": 8.1,
+      "vx": -0.4,
+      "vy": 2
+    },
+    "ticks": 1200,
+    "commands": [
+      {
+        "tick": 8,
+        "input": {
+          "left": true
+        }
+      },
+      {
+        "tick": 32,
+        "input": {}
+      }
+    ],
+    "target": {
+      "mechanismId": "pop-center"
+    }
+  },
+  {
+    "name": "Right center aim",
+    "initial": {
+      "x": 3.5,
+      "y": 8.1,
+      "vx": 0.4,
+      "vy": 2
+    },
+    "ticks": 1200,
+    "commands": [
+      {
+        "tick": 8,
+        "input": {
+          "right": true
+        }
+      },
+      {
+        "tick": 32,
+        "input": {}
+      }
+    ],
+    "target": {
+      "mechanismId": "pop-center"
+    }
+  },
+  {
+    "name": "Left center miss",
+    "initial": {
+      "x": 2.9,
+      "y": 8.1,
+      "vx": -0.4,
+      "vy": 2
+    },
+    "ticks": 1200,
+    "commands": [
+      {
+        "tick": 8,
+        "input": {
+          "left": true
+        }
+      },
+      {
+        "tick": 32,
+        "input": {}
+      }
+    ],
+    "target": {
+      "mechanismId": "pop-center"
+    }
+  },
+  {
+    "name": "Right center miss",
+    "initial": {
+      "x": 3.1,
+      "y": 8.1,
+      "vx": 0.4,
+      "vy": 2
+    },
+    "ticks": 1200,
+    "commands": [
+      {
+        "tick": 8,
+        "input": {
+          "right": true
+        }
+      },
+      {
+        "tick": 32,
+        "input": {}
+      }
+    ],
+    "target": {
+      "mechanismId": "pop-center"
+    }
+  },
+  {
+    "name": "Left slow center arrival",
+    "initial": {
+      "x": 2.5,
+      "y": 8.1,
+      "vx": -0.05,
+      "vy": 0.1
+    },
+    "ticks": 1200,
+    "commands": [
+      {
+        "tick": 8,
+        "input": {
+          "left": true
+        }
+      },
+      {
+        "tick": 32,
+        "input": {}
+      }
+    ],
+    "target": {
+      "mechanismId": "pop-center"
+    }
+  },
+  {
+    "name": "Right slow center arrival",
+    "initial": {
+      "x": 3.5,
+      "y": 8.1,
+      "vx": 0.05,
+      "vy": 0.1
+    },
+    "ticks": 1200,
+    "commands": [
+      {
+        "tick": 8,
+        "input": {
+          "right": true
+        }
+      },
+      {
+        "tick": 32,
+        "input": {}
+      }
+    ],
+    "target": {
+      "mechanismId": "pop-center"
+    }
+  },
+  {
+    "name": "Left slow inlane",
+    "initial": {
+      "x": 1.15,
+      "y": 6.6,
+      "vx": 0,
+      "vy": 0.1
+    },
+    "ticks": 1200,
+    "commands": []
+  },
+  {
+    "name": "Right slow inlane",
+    "initial": {
+      "x": 4.25,
+      "y": 6.6,
+      "vx": 0,
+      "vy": 0.1
+    },
+    "ticks": 1200,
+    "commands": []
+  },
+  {
+    "name": "Left held slow inlane",
+    "initial": {
+      "x": 1.15,
+      "y": 6.6,
+      "vx": 0,
+      "vy": 0.1
+    },
+    "ticks": 1200,
+    "warmup": {
+      "ticks": 60,
+      "input": {
+        "left": true
+      }
+    },
+    "commands": []
+  },
+  {
+    "name": "Right held slow inlane",
+    "initial": {
+      "x": 4.25,
+      "y": 6.6,
+      "vx": 0,
+      "vy": 0.1
+    },
+    "ticks": 1200,
+    "warmup": {
+      "ticks": 60,
+      "input": {
+        "right": true
+      }
+    },
+    "commands": []
+  },
+  {
+    "name": "Left held heel release and retry",
+    "initial": {
+      "x": 1.15,
+      "y": 6.6,
+      "vx": 0,
+      "vy": 0.1
+    },
+    "ticks": 7200,
+    "warmup": {
+      "ticks": 60,
+      "input": {
+        "left": true
+      }
+    },
+    "commands": [
+      {
+        "tick": 1200,
+        "input": {}
+      },
+      {
+        "tick": 1320,
+        "input": {
+          "left": true
+        }
+      },
+      {
+        "tick": 1344,
+        "input": {}
+      }
+    ]
+  },
+  {
+    "name": "pop-left weak approach",
+    "initial": {
+      "x": 2,
+      "y": 3.5,
+      "vx": 0.03,
+      "vy": -0.2
+    },
+    "ticks": 2400,
+    "commands": [],
+    "target": {
+      "mechanismId": "pop-left"
+    }
+  },
+  {
+    "name": "pop-left miss approach",
+    "initial": {
+      "x": 1.3,
+      "y": 3.5,
+      "vx": -0.4,
+      "vy": -2
+    },
+    "ticks": 2400,
+    "commands": [],
+    "target": {
+      "mechanismId": "pop-left"
+    }
+  },
+  {
+    "name": "pop-center weak approach",
+    "initial": {
+      "x": 2.85,
+      "y": 4.8,
+      "vx": 0.03,
+      "vy": -0.2
+    },
+    "ticks": 2400,
+    "commands": [],
+    "target": {
+      "mechanismId": "pop-center"
+    }
+  },
+  {
+    "name": "pop-center miss approach",
+    "initial": {
+      "x": 3.55,
+      "y": 4.8,
+      "vx": 0.4,
+      "vy": -2
+    },
+    "ticks": 2400,
+    "commands": [],
+    "target": {
+      "mechanismId": "pop-center"
+    }
+  },
+  {
+    "name": "pop-right weak approach",
+    "initial": {
+      "x": 3.75,
+      "y": 3.5,
+      "vx": 0.03,
+      "vy": -0.2
+    },
+    "ticks": 2400,
+    "commands": [],
+    "target": {
+      "mechanismId": "pop-right"
+    }
+  },
+  {
+    "name": "pop-right miss approach",
+    "initial": {
+      "x": 4.45,
+      "y": 3.5,
+      "vx": 0.4,
+      "vy": -2
+    },
+    "ticks": 2400,
+    "commands": [],
+    "target": {
+      "mechanismId": "pop-right"
+    }
+  }
+]
