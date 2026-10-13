@@ -43,7 +43,7 @@ Specify mechanics directly when requesting a style. For example: “fast outer r
 
 ### Visual assembly review
 
-For a fresh layout or broad lower-field redesign, choose a supplied reference and sketch the entire lower assembly before tuning individual contacts. Compare spatial relationships, not just the presence of named components. Use normalized playable width (excluding the shooter channel) to reason about proportions; perspective references are structural evidence, not measured prefabs.
+For a fresh layout or broad lower-field redesign, choose a supplied reference and sketch the entire lower assembly before tuning individual contacts. Compare spatial relationships, not just the presence of named components. Check playable width and lane clearances in ball diameters before arranging components: a visually plausible assembly can still be cramped when the demo ball is oversized. Use normalized playable width (excluding the shooter channel) to reason about proportions; perspective references are structural evidence, not measured prefabs.
 
 Inspect actual renderings at rest and fully raised, at the same orientation as the reference. Record: flipper pivot separation, tip gap and slope; sling width/height and proximity to the swept flippers; continuous inlane boundaries into the heels; adjacent outlane branches; and the apron defining the visual bottom. Verify full-ball clearance separately. Avoid disconnected collector arms, skinny placeholder slings and exposed drain areas being accepted simply because routes pass. An apron is presentation below the control area, not a collision wall or a powered save.
 

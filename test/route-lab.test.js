@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { runRoute } from '../src/route-lab.js';
+import { shotPresets } from '../src/shot-presets.js';
 import { firstTable } from '../src/table.js';
 import { readFileSync } from 'node:fs';
 const empty={...firstTable,walls:[],guides:[],flippers:[],gates:[],mechanisms:[],gravity:0,damping:{linear:0,angular:0},game:{...firstTable.game,enabled:false}};
@@ -15,7 +16,7 @@ test('ordered route stages ignore early crossings and use every physics tick',()
   assert.deepEqual(runRoute(spec,stages),result);
 });
 test('event followed by a return region requires actual downstream passage',()=>{
-  const spec={table:firstTable,initial:{x:1.5,y:7.6,vx:-.4,vy:2},ticks:1200,commands:[{tick:68,input:{left:true}},{tick:92,input:{}}]};
+  const spec={...shotPresets.left,ticks:1200};
   const route=runRoute(spec,[{id:'contact',event:{type:'flipper.contact',id:'flipper-0'}},{id:'redirect',region:{x:1,y:6.1,width:3.8,height:.15}}]);
   assert.equal(route.complete,true);
   assert.ok(route.stages[1].tick>route.stages[0].tick);

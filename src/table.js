@@ -33,7 +33,7 @@ export const table = {
 // Deliberate arcade scale: 6 × 10 world units, not real-machine SI calibration.
 // Fresh reference-led open table; retain the calibrated actuator baseline.
 export const firstTable = {
-  ...table, ballRadius:0.18, flipperLength:.95, apron:{y:9.05},
+  ...table, ballRadius:0.13, flipperLength:.95, apron:{y:9.05},
   // Conventional two-flipper lower field, centered in the playable area
   // (the shooter channel lies outside x=5.1).
   flippers:[{x:1.5,y:8.15,side:1},{x:3.95,y:8.15,side:-1}],
@@ -50,10 +50,10 @@ export const firstTable = {
     [[.35,9.8],[.35,1.2]],[[.35,1.2],[1.2,.35]],
     [[1.2,.35],[4.8,.35]],[[4.8,.35],[5.65,1.2]],[[5.65,1.2],[5.65,9.3]],
     [[5.1,1.85],[5.1,9.3]],[[5.1,9.3],[5.65,9.3]],
-    // Continuous downhill protection joins the outer heels. Held catches must
+    // Near-tangent guide exits meet the upper heel without a V-shaped pocket. Held catches must
     // release when the paddle lowers; outlanes remain outside these guides.
-    [[.9,6.3],[.9,7.55]],[[.9,7.55],[1.5,8.15]],
-    [[4.55,6.3],[4.55,7.55]],[[4.55,7.55],[3.95,8.15]],
+    [[.9,6.3],[.9,7.78]],[[.9,7.78],[1.45,8.02]],
+    [[4.55,6.3],[4.55,7.78]],[[4.55,7.78],[4,8.02]],
   ],
   mechanisms:[
     {id:'pop-left',type:/** @type {const} */('bumper'),x:2,y:2.7,radius:.38,kick:6},
@@ -65,7 +65,7 @@ export const firstTable = {
     {id:'lane-right',type:/** @type {const} */('post'),x:4.55,y:6.3,radius:.13,kick:0},
     // Paired triangular slings frame the lower fan. Their outer edges form
     // protected inlanes; their inner tips clear the full raised-paddle sweep.
-    {id:'sling-left',type:/** @type {const} */('sling'),x:1.85,y:6.85,radius:0,kick:5,vertices:[[1.55,6.25],[1.55,7.3],[2.4,7.3]],direction:[1,-1],activeNormal:[1.05,-.85]},
-    {id:'sling-right',type:/** @type {const} */('sling'),x:3.6,y:6.85,radius:0,kick:5,vertices:[[3.9,6.25],[3.05,7.3],[3.9,7.3]],direction:[-1,-1],activeNormal:[-1.05,-.85]},
+    {id:'sling-left',type:/** @type {const} */('sling'),x:1.85,y:6.85,radius:0,kick:5,vertices:[[1.4,6.05],[1.4,7.05],[2.05,7.35]],direction:[1,-1],activeNormal:[1.3,-.65]},
+    {id:'sling-right',type:/** @type {const} */('sling'),x:3.6,y:6.85,radius:0,kick:5,vertices:[[4.05,6.05],[3.4,7.35],[4.05,7.05]],direction:[-1,-1],activeNormal:[-1.3,-.65]},
   ],
 };
