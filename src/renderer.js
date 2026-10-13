@@ -8,6 +8,20 @@ export function render(ctx, state, showWalls = true) {
   for (let x = 0.5; x < table.width; x += 0.5) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,table.height); ctx.stroke(); }
   ctx.textAlign='center'; ctx.fillStyle='#42616a'; ctx.font='0.16px Arial'; ctx.fillText('F I R S T   C O N T A C T',3,3.3);
   ctx.beginPath(); ctx.arc(3,4.2,1.4,0,Math.PI*2); ctx.stroke();
+  if(table.apron&&showWalls){
+    // The apron marks the cabinet cover below the control area. No collision
+    // rail or save is implied; drained balls continue beneath this cover.
+    const y=table.apron.y;
+    ctx.fillStyle='#0e2028';ctx.fillRect(.35,y,4.75,table.height-y);
+    ctx.strokeStyle='#59727a';ctx.lineWidth=.04;ctx.beginPath();ctx.moveTo(.35,y);ctx.lineTo(5.1,y);ctx.stroke();
+    ctx.fillStyle='#a4b9bb';ctx.font='.14px Arial';ctx.fillText('F I R S T   C O N T A C T',2.725,y+.38);
+    ctx.font='.1px Arial';ctx.fillStyle='#73929a';ctx.fillText('THREE BALLS  ·  KEEP THE RALLY ALIVE',2.725,y+.64);
+    // Label the actual open lane corridors, rather than drawing fake rails.
+    ctx.save();ctx.font='.1px Arial';
+    for(const x of [.62,4.83]){ctx.translate(x,6.9);ctx.rotate(Math.PI/2);ctx.fillText('OUT',0,0);ctx.rotate(-Math.PI/2);ctx.translate(-x,-6.9);}
+    for(const x of [1.23,4.22]){ctx.translate(x,6.9);ctx.rotate(Math.PI/2);ctx.fillText('IN',0,0);ctx.rotate(-Math.PI/2);ctx.translate(-x,-6.9);}
+    ctx.restore();
+  }
   ctx.font='italic 0.65px Georgia'; ctx.fillStyle='#31515a'; ctx.fillText('01',3,4.4);
   ctx.lineCap='round'; ctx.lineJoin='round';
   if(showWalls)for(const m of table.mechanisms){
@@ -31,9 +45,9 @@ export function render(ctx, state, showWalls = true) {
   for (const f of state.flippers) {
     ctx.save();ctx.translate(f.x,f.y);ctx.rotate(f.angle);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(table.flipperLength,0);ctx.lineWidth=table.flipperRadius*2;ctx.strokeStyle='#f3b46d';ctx.shadowColor='#f3b46d';ctx.shadowBlur=12;ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#203943';ctx.beginPath();ctx.arc(0,0,.055,0,Math.PI*2);ctx.fill();ctx.restore();
   }
-  ctx.fillStyle='#73929a';ctx.font='0.12px Arial';ctx.fillText('D R A I N',3,9.5);
+  if(!table.apron){ctx.fillStyle='#73929a';ctx.font='0.12px Arial';ctx.fillText('D R A I N',3,9.5);}
   if(table.game.enabled&&showWalls){ctx.strokeStyle='#f3b46d';ctx.lineWidth=.09;ctx.beginPath();ctx.moveTo(table.spawn.x,9.18);ctx.lineTo(table.spawn.x,9.7+state.pull*.2);ctx.stroke();}
-  if (!state.drained) {
+  if (!state.drained && (!table.apron || !showWalls || state.ball.x>=5.1 || state.ball.y-table.ballRadius<table.apron.y)) {
     const b=state.ball;ctx.save();ctx.translate(b.x,b.y);ctx.shadowColor='#000';ctx.shadowBlur=8;ctx.shadowOffsetY=3;
     const g=ctx.createRadialGradient(-.045,-.05,.01,0,0,table.ballRadius);g.addColorStop(0,'#fff');g.addColorStop(.3,'#e5f2f3');g.addColorStop(.7,'#7a949f');g.addColorStop(1,'#283e4c');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,table.ballRadius,0,Math.PI*2);ctx.fill();ctx.restore();
   }

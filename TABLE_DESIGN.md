@@ -41,6 +41,14 @@ For this project, use these patterns as design options rather than templates to 
 
 Specify mechanics directly when requesting a style. For example: “fast outer return, two distinct center aims, and an opposite-flipper feed” is more actionable than “make it like designer X.” Kineticist describes recurring designer tendencies but explicitly cautions that designers do not always follow them. [Source: Kineticist](https://www.kineticist.com/news/a-beginners-guide-to-pinball-designers)
 
+### Visual assembly review
+
+For a fresh layout or broad lower-field redesign, choose a supplied reference and sketch the entire lower assembly before tuning individual contacts. Compare spatial relationships, not just the presence of named components. Use normalized playable width (excluding the shooter channel) to reason about proportions; perspective references are structural evidence, not measured prefabs.
+
+Inspect actual renderings at rest and fully raised, at the same orientation as the reference. Record: flipper pivot separation, tip gap and slope; sling width/height and proximity to the swept flippers; continuous inlane boundaries into the heels; adjacent outlane branches; and the apron defining the visual bottom. Verify full-ball clearance separately. Avoid disconnected collector arms, skinny placeholder slings and exposed drain areas being accepted simply because routes pass. An apron is presentation below the control area, not a collision wall or a powered save.
+
+Save both views and a short reference comparison with explicit departures. If the assembly still visibly differs from the chosen pattern, revise the geometry before declaring the layout conventional. Repeat this comparison after simulator-driven changes. Report visual structure and simulated route behavior as separate findings; neither substitutes for human playtesting.
+
 ## Shot geometry
 
 The VP Workshop guide starts with the intended shot and the flipper region that can send a ball toward it, then aligns the entrance and channel with that approach. This is a useful geometric starting point; it is not a prediction of our simulated contact dynamics. [Source: Designing Good Shots](https://www.vpforums.org/index.php?app=tutorials&article=150)
